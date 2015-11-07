@@ -95,17 +95,18 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, Camera, $cordovaCamera) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker) {
 
     //Get a photo from the gallery
-    //http://stackoverflow.com/questions/31337017/open-the-image-gallery-with-ionic-angularjs
+    //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 75
+        quality: 75,
+
     };
 
-    $cordovaCamera.getPicture().then(function(imageData) {
+    $cordovaImagePicker.getPictures().then(function(imageData) {
         console.log("img URI= " + imageData);
         //Here you will be getting image data
     }, function(err) {
@@ -113,7 +114,24 @@ angular.module('starter.controllers', [])
         console.log('Failed because: ' + err);
     });
 
-};
+    };
+
+    //http://ngcordova.com/docs/plugins/imagePicker/
+    $scope.takePhoto = function () {
+
+        //Options for the Photo
+        var options = {
+            quality: 75
+        };
+
+        $cordovaCamera.getPicture().then(function(imageData) {
+            console.log("img URI= " + imageData);
+            //Here you will be getting image data
+        }, function(err) {
+            alert("Failed because: " + err);
+            console.log('Failed because: ' + err);
+        });
+    }
 })
 
 .controller('PlaylistsCtrl', function($scope) {
