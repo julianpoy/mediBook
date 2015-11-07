@@ -291,22 +291,23 @@ angular.module('starter.controllers', [])
         ionic.trigger('click', { target: document.getElementById('fileInput') });
     }
 
-    $scope.getDoc = function(target){
-        var file = target.files[0];
-        $scope.addedFiles.push(file.name);
-        $scope.$apply();
-    };
+    // $scope.getDoc = function(target){
+    //     var file = target.files[0];
+    //     $scope.addedFiles.push(file.name);
+    //     $scope.$apply();
+    // };
 
     //Get a photo from the gallery
     //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 75
+        quality: 75,
+        maximumImagesCount: 1
 
     };
 
-    $cordovaImagePicker.getPictures().then(function(imageData) {
+    $cordovaImagePicker.getPictures(options).then(function(imageData) {
         $scope.addedFiles.push(imageData[0]);
     }, function(err) {
         alert("Failed because: " + err);
