@@ -1,0 +1,18 @@
+<ion-view view-title="Home">
+  <ion-content ng-init = "getDocuments()">
+
+      <!-- Loading Spinner -->
+      <div class = "feedSpinnerContainer" ng-show = "loading">
+          <ion-spinner class = "spinner-positive ionicSpinner"></ion-spinner>
+          <h4 class = "center spinnerText">Downloading and decrypting your documents. This may take a short while...</h4>
+      </div>
+
+    <ion-list>
+      <ion-item ng-repeat="doc in documents" href="#/app/document/{{doc._id}}">
+        {{doc.title}}
+      </ion-item>
+    </ion-list>
+
+
+  </ion-content>
+</ion-view>

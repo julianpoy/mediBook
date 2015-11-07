@@ -166,7 +166,7 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 75,
+        quality: 75
 
     };
 
@@ -198,15 +198,24 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('HomeCtrl', function($scope) {
+
+    //Query the backend for the documents
+    $scope.getDocuments = function () {
+        //Set Loading to true
+        $scope.loading = true;
+
+        var payload = {
+            username: $scope.loginData.username,
+            password: $scope.loginData.password
+        };
+
+        User.login(payload, function(data, status){
+            
+        }, function(){
+            alert("FAILURE!");
+        });
+    }
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams) {
