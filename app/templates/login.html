@@ -1,18 +1,17 @@
-<ion-modal-view>
+<ion-modal-view ng-controller = "AuthCtrl">
   <ion-header-bar>
     <h1 class="title center">MediBook</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()" ng-if = "window.localStorage.getItem('sessionToken')">Close</button>
+      <button class="button button-clear" ng-click="closeLogin()" ng-if = "sessionToken">Close</button>
     </div>
   </ion-header-bar>
-  <ion-content ng-controller = "AuthCtrl">
+  <ion-content>
       <!-- Loading Spinner -->
       <ion-spinner class = "spinner-positive ionicSpinner" ng-show = "loading"></ion-spinner>
     <form ng-init = "showPageOne = true;confirmed = false" name = "authForm">
 
     <div class = "authFormPageOne" ng-show = "showPageOne">
         <h4 class = "center">Welcome to MediBook! <br>The Secure medical information storage app. <br><br>Please Login or Register</h4>
-
 
           <div class="list radioAuthList">
 

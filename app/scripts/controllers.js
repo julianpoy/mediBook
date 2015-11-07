@@ -41,7 +41,7 @@ angular.module('starter.controllers', [])
     $scope.modal.show();
 
     //Check if they have their session token
-    if(sessionToken || window.localStorage.getItem("sessionToken")) {
+    if(window.localStorage.getItem("sessionToken")) {
         //Allow them to exit the login
         $timeout(function () {
             $scope.modal.backdropClickToClose = true;
@@ -52,29 +52,19 @@ angular.module('starter.controllers', [])
         //Allow them to exit the login
         $timeout(function () {
             $scope.modal.backdropClickToClose = false;
-            $scope.modal.hardwareBackButtonClose = false;
+            $scope.modal.hardwareBackButtonClose = true;
         }, 0);
     }
 
   };
 
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-        // Simulate a login delay. Remove this and replace with your login
-        // code if using a login system
-        $timeout(function() {
-          $scope.closeLogin();
-        }, 1000);
-  };
-
-
-
 // END APP CONTROLLER
 })
 
 .controller('AuthCtrl', function($scope, $timeout, User) {
+
+    //Get the session Token
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
     //Show The Next Page
     $scope.showNextPage = function() {
