@@ -74,6 +74,7 @@
     "com.ionic.keyboard"
   ],
   "cordovaPlatforms": [
-    "android"
+    "android",
+    "ios"
   ]
 }
