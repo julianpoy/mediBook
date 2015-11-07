@@ -11,7 +11,6 @@ var fs = require('fs');
 
 /* Create a Document */
 router.post('/', function(req, res) {
-    //Check if required was sent
     if (!(req.body.title &&
             req.body.body &&
             req.body.images &&
@@ -104,6 +103,40 @@ router.get('/file/:filename', function(req, res) {
 	});
 });
 
+/* Update a Document */
+router.put('/:id', function(req, res) {
+    if (!req.body.sessionToken) {
+        return res.status(412).json({
+            msg: "Requirements not met!"
+        });
+    }
+    SessionService.validateSession(req.body.sessionToken, function(err, userId) {
+        if (err) {
+            res.json(err);
+        } else {
+            var newDocument = {};
 
+            if (req.body.title && typeof req.body.title === 'string') newDocument.title = req.body.title;
+            if (req.body.body && typeof req.body.body === 'string') newDocument.body = req.body.body;
+            if (req.body.images) newDocument.images = req.body.images;
+
+            var setDocument = {
+                $set: newDocument
+            }
+
+            Document.update({
+                    _id: req.params.id,
+                    userId: userId
+                }, setDocument)
+                .exec(function(err, document) {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        res.status(200).send("Updated");
+                    }
+                })
+        }
+    });
+});
 
 module.exports = router;
