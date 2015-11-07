@@ -347,21 +347,32 @@ angular.module('starter.controllers', [])
         var encryptKey = window.localStorage.getItem("key");
 
         //First Encrypt the title
-        var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey).toString(CryptoJS.enc.Latin1);
+        var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey);
 
         //Then Encrypt the description
         //First Encrypt the title
-        var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey).toString(CryptoJS.enc.Latin1);
+        var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
 
         //Our array of images
         var imageArray = [];
 
-        for(var i = 0; i < $scope.addedFiles; i++)
-        {
-            //Encryt the image
-            var encryptImg = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey).toString(CryptoJS.enc.Latin1);
+        //Options for the file upload
+        var options = {};
 
-            $cordovaFileTransfer.upload(uploadUrl, encryptImg, options, true).then(function(result) {
+        for(var i = 0; i < $scope.addedFiles.length; i++)
+        {
+
+            //Reader to read the files
+            var reader = new FileReader();
+
+            //Encrypt the contents of the image
+            reader.onload = function(e){
+				// Use the CryptoJS library and the AES cypher to encrypt the
+				// contents of the file, held in e.target.result, with the password
+				var encrypted = CryptoJS.AES.encrypt(e.target.result, password);
+            }
+
+            $cordovaFileTransfer.upload(uploadUrl, readAsDataURL($scope.addedFiles[i]), options, true).then(function(result) {
                 var imageName = JSON.parse(result.response);
 
                 imageArray.push(imageName.filename);
@@ -379,8 +390,8 @@ angular.module('starter.controllers', [])
           //Now create our payload to send to the backend
           var payload = {
               sessionToken: $scope.sessionToken,
-              title: encryptTitle,
-              body: encryptDesc,
+              title: encryptTitle.toString(),
+              body: encryptDesc.toString(),
               images: imageArray
           };
 
