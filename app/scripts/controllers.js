@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -53,6 +53,11 @@ angular.module('starter.controllers', [])
   }
 
   if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+  //Go to a new state
+  $scope.navigatePage = function(stateName) {
+      $state.go(stateName);
+  }
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
