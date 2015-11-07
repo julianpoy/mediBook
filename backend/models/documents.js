@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Document = new mongoose.Schema({
-    accountId: {
+    userId: {
         type: String,
         ref: 'user'
     },

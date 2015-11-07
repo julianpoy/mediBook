@@ -14,6 +14,7 @@ var documents = require('./models/documents');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var documents = require('./routes/documents');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/documents', documents);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
