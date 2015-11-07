@@ -50,21 +50,49 @@ angular.module('starter.controllers', [])
         }, 1000);
   };
 
-  //Register the User
-  $scope.registerUser = function () {
-      //Set Loading to true
-      $scope.loading = true;
-  }
-
-  //Login the User
-  $scope.loginUser = function () {
-      //Set Loading to true
-      $scope.loading = true;
-  }
-
 
 
 // END APP CONTROLLER
+})
+
+.controller('AuthCtrl', function($scope, $timeout) {
+
+    //Show The Next Page
+    $scope.showNextPage = function() {
+
+       //Timeout to apply the variable change
+       $timeout(function () {
+           //Set show page one false
+           $scope.showPageOne = false;
+       }, 0);
+
+        //Timeout to show next thing
+        $timeout(function () {
+            //Show the next page
+            $scope.showPageTwo = true;
+        }, 1000);
+    }
+
+    //Show the register confirmation
+    $scope.showRegConfirm = function () {
+
+        //Show the confrmation
+        $timeout(function () {
+            $scope.confirmed = true;
+        }, 0);
+    }
+
+    //Register the User
+    $scope.registerUser = function () {
+        //Set Loading to true
+        $scope.loading = true;
+    }
+
+    //Login the User
+    $scope.loginUser = function () {
+        //Set Loading to true
+        $scope.loading = true;
+    }
 })
 
 .controller('PlaylistsCtrl', function($scope) {

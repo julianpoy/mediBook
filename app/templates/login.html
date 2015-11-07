@@ -1,71 +1,130 @@
 <ion-modal-view>
   <ion-header-bar>
-    <h1 class="title">MediBook</h1>
+    <h1 class="title center">MediBook</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeLogin()" ng-if = "window.localStorage.getItem('sessionToken')">Close</button>
     </div>
   </ion-header-bar>
-  <ion-content>
+  <ion-content ng-controller = "AuthCtrl">
       <!-- Loading Spinner -->
       <ion-spinner class = "spinner-positive ionicSpinner" ng-show = "loading"></ion-spinner>
-    <form>
+    <form ng-init = "showPageOne = true;confirmed = false" name = "authForm">
 
-    <h4 class = "center">Welcome to MediBook! The Secure medical information storage app. Please Login or Register</h4>
+    <div class = "authFormPageOne" ng-show = "showPageOne">
+        <h4 class = "center">Welcome to MediBook! <br>The Secure medical information storage app. <br><br>Please Login or Register</h4>
 
-      <div class="list">
 
-      <label class="item item-radio">
-        <input type="radio" name="group" value = "login" ng-model = "authType">
-        <i class="radio-icon ion-checkmark"></i>
-        <div class="item-content">
-          Login
+          <div class="list radioAuthList">
+
+          <label class="item item-radio">
+            <input type="radio" name="group" value = "login" ng-model = "authType">
+            <i class="radio-icon ion-checkmark"></i>
+            <div class="item-content">
+              Login
+            </div>
+          </label>
+
+          <label class="item item-radio">
+            <input type="radio" name="group" value = "register" ng-model = "authType">
+            <i class="radio-icon ion-checkmark"></i>
+            <div class="item-content">
+              Register
+            </div>
+          </label>
+
+
+
+          <div class = "loginInput" ng-show = "authType == 'login'">
+                <label class="item item-input">
+                  <span class="input-label">E-mail</span>
+                  <input type="email" ng-model="loginData.username">
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Password</span>
+                  <input type="password" ng-model="loginData.password">
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Encryption Key</span>
+                  <input type="password" ng-model="loginData.key">
+                </label>
+                <label class="item">
+                    <button class="button button-outline button-positive"
+                    ng-click = "loginUser()"
+                    ng-disabled = "loading ||
+                    !loginData.username ||
+                    !loginData.password ||
+                    !loginData.key ||
+                    loginData.key.length < 8">Log in</button>
+                </label>
+          </div>
+
+          <div class = "loginInput" ng-show = "authType != 'login' && authType != null">
+                <label class="item item-input">
+                  <span class="input-label">E-mail</span>
+                  <input type="email" name = "regEmail" ng-model="regData.username">
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Password</span>
+                  <input type="password" ng-model="regData.password" >
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Confirm Password</span>
+                  <input type="password" ng-model="regData.confirmPassword" >
+                </label>
+                <label class="item">
+                    <button class="button button-outline button-positive"
+                    ng-click = "showNextPage()"
+                    ng-disabled = "loading ||
+                    !authForm.regEmail.$valid ||
+                    regData.password != regData.confirmPassword ||
+                    !regData.password ||
+                    !regData.confirmPassword">Register</button>
+                </label>
+          </div>
+
         </div>
-      </label>
 
-      <label class="item item-radio">
-        <input type="radio" name="group" value = "register" ng-model = "authType">
-        <i class="radio-icon ion-checkmark"></i>
-        <div class="item-content">
-          Register
+    </div>
+
+    <div class = "authFormPageTwo" ng-if = "showPageTwo">
+        <h3 class = "center">Please enter an encryption key</h3>
+        <h5 class = "center keyDesc">An encryption key is a code that only <b>YOU</b>, or those that you share it with know. This is <b>NOT</b> stored by us, and even we would not be able to view or access your documents. This ensures that everything throughout this app is only visible to you. You must enter it to decrypt your files. <b>If you lose this key, no one will be able to recover it</b>, so keep it safe! It must be at least 8 characters</h5>
+
+        <label class="item item-input">
+          <span class="input-label">Encryption Key</span>
+          <input type="text" ng-model="regData.key" >
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Encryption key Confirm</span>
+          <input type="text" ng-model="regData.keyConfirm">
+        </label>
+
+        <label ng-show = "!confirmed" class="item">
+            <button class="button button-outline button-positive"
+            ng-click = "showRegConfirm()"
+            ng-disabled = "loading ||
+            regData.key != regData.keyConfirm ||
+            !regData.key ||
+            !regData.keyConfirm ||
+            regData.key.length < 8 ||
+            regData.keyConfirm.length < 8">Submit</button>
+        </label>
+
+        <div ng-show = "confirmed">
+
+            <h4 class = "center keyConfirmDesc">Are you sure you have your Encryption Key remembered? Once you click Yes, the above key will be submitted!</h4>
+            <label class="item">
+                <button class="button button-outline button-positive"
+                ng-click = "showNextPage()"
+                ng-disabled = "loading ||
+                regData.key != regData.keyConfirm ||
+                !regData.key ||
+                !regData.keyConfirm">Yes</button>
+            </label>
         </div>
-      </label>
 
-      <br>
-      <br>
+    </div>
 
-      <div class = "loginInput" ng-show = "authType == 'login'">
-            <label class="item item-input">
-              <span class="input-label">E-mail</span>
-              <input type="text" ng-model="loginData.username">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Password</span>
-              <input type="password" ng-model="loginData.password">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Encryption Key</span>
-              <input type="password" ng-model="loginData.key">
-            </label>
-            <label class="item">
-                <button class="button button-block button-positive" type="submit" ng-click = "loginUser()" ng-disabled = "loading">Log in</button>
-            </label>
-      </div>
-
-      <div class = "loginInput" ng-show = "authType != 'login' && authType != null">
-            <label class="item item-input">
-              <span class="input-label">E-mail</span>
-              <input type="text" ng-model="regData.username">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Password</span>
-              <input type="text" ng-model="regData.password" >
-            </label>
-            <label class="item">
-                <button class="button button-block button-positive" ng-click = "registerUser()" ng-disabled = "loading">Register</button>
-            </label>
-      </div>
-
-      </div>
     </form>
   </ion-content>
 </ion-modal-view>
