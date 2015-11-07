@@ -45,12 +45,14 @@ router.post('/', function(req, res) {
 
 /* Get User Documents */
 router.get('/', function(req, res) {
+    console.log(req.query.sessionToken);
     SessionService.validateSession(req.query.sessionToken, function(err, userId) {
+        console.log(userId);
         if (err) {
             res.json(err);
         } else {
             Document.find({
-                    _id: userId
+                    userId: userId
                 })
                 .select()
                 .exec(function(err, data) {

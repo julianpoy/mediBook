@@ -82,7 +82,7 @@ router.post('/join', function(req, res, next) {
             } else {
               var token = crypto.randomBytes(48).toString('hex');
               new Session({
-                user_id: newUser._id,
+                accountId: newUser._id,
                 token: token
               }).save(function(err) {
                 if (err) {

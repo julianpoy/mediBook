@@ -76,7 +76,8 @@ angular.module('starter.controllers', [])
 
   };
 
-  $scope.documents = {};
+  $scope.documents = [];
+  $scope.loading = false;
 
   //Query the backend for the documents
   $scope.getDocuments = function () {
@@ -84,8 +85,6 @@ angular.module('starter.controllers', [])
       //Check if we have the documents already
       if($scope.sessionToken)
       {
-          //Create the documents object
-          $scope.documents = [];
 
           //Set Loading to true
           $scope.loading = true;
