@@ -22,7 +22,7 @@ return $resource( 'http://localhost:3000/' + 'users/:Id',
 
 .factory('Documents', ['$resource', function($resource) {
 
-return $resource( 'http://mangorabo.ngrok.kondeo.com:8080' + '/documents',
+return $resource( 'http://localhost:3000' + '/documents',
     { Id: '@Id' }, {
         get: {
             method: 'GET',
