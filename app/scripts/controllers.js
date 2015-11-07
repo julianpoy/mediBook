@@ -121,17 +121,24 @@ angular.module('starter.controllers', [])
 
         //Options for the Photo
         var options = {
-            quality: 75
+            quality: 75,
+            saveToPhotoAlbum: false
         };
 
-        $cordovaCamera.getPicture().then(function(imageData) {
-            console.log("img URI= " + imageData);
-            //Here you will be getting image data
+        //Open the camera to take the picture
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+
+            //save the image URI
+            $scope.cameraPhoto = imageData;
+
         }, function(err) {
             alert("Failed because: " + err);
             console.log('Failed because: ' + err);
         });
     }
+
+    //Submit the document to the backend
+
 })
 
 .controller('PlaylistsCtrl', function($scope) {

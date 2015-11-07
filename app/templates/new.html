@@ -9,6 +9,11 @@
       <input type="text" ng-model="newDoc.title">
     </label>
 
+    <!-- Div to hold image or filename -->
+    <ion-item class = "uploadContainer">
+        <img ng-if = "cameraPhoto" ng-src = "cameraPhoto" />
+    </ion-item>
+
     <button class="button button-outline button-positive newButton"
     ng-click = "getPhoto()">Add Image From Gallery</button>
 
@@ -18,8 +23,15 @@
     <label class="item item-input">
       <span class="input-label">Description</span>
       <textarea rows="8" cols="10"
-      ng-model="newDoc.desc">
+      ng-model="newDoc.desc"></textarea>
     </label>
+
+    <button class="button button-outline button-positive newButton"
+    ng-disabled = "!newDoc.title ||
+    !newDoc.desc"
+    ng-click = "submitDoc()">Submit</button>
+
+
     </form>
   </ion-content>
 </ion-view>
