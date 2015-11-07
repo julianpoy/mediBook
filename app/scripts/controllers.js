@@ -95,8 +95,29 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $stateParams) {
-    
+.controller('NewCtrl', function($scope, $cordovaCamera) {
+
+    //Get a photo from the gallery
+    //http://stackoverflow.com/questions/31337017/open-the-image-gallery-with-ionic-angularjs
+    $scope.getPhoto = function() {
+
+    var options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+        mediaType: Camera.MediaType.ALLMEDIA,
+        saveToPhotoAlbum: true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+        console.log("img URI= " + imageData);
+        //Here you will be getting image data
+    }, function(err) {
+        alert("Failed because: " + err);
+        console.log('Failed because: ' + err);
+    });
+
+};
 })
 
 .controller('PlaylistsCtrl', function($scope) {
