@@ -240,8 +240,8 @@ angular.module('starter.controllers', [])
             $timeout(function () {
                 $scope.reInitModal();
             }, 10);
-        }, function(){
-            alert("FAILURE!");
+        }, function(err){
+            alert(angular.toJson(err));
         });
 
     }
@@ -362,7 +362,7 @@ angular.module('starter.controllers', [])
     $scope.submitDoc = function() {
 
         //Our backend url and the file we would like to upload
-        var uploadUrl = "http://mangorabo.ngrok.kondeo.com:8080/documents/file";
+        var uploadUrl = "http://jnode.ngrok.kondeo.com:8080/documents/file";
 
         //Get our encrypt Key
         var encryptKey = window.localStorage.getItem("key");
@@ -386,10 +386,12 @@ angular.module('starter.controllers', [])
             var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
             console.log(encrypted.toString());
 
+            var file = new File([encrypted], "filename");
+
             //console.log($scope.addedFiles[i]);
 
 
-            $cordovaFileTransfer.upload(uploadUrl, $scope.addedFiles[i], options, true)
+            $cordovaFileTransfer.upload(uploadUrl, file, options, true)
             .then(function(result) {
                 var imageName = JSON.parse(result.response);
 
