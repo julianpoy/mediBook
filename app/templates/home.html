@@ -8,9 +8,18 @@
       </div>
 
     <ion-list>
-      <ion-item ng-repeat="doc in documents" href="#/app/document/{{doc._id}}">
-        {{doc.title}}
-      </ion-item>
+      <div class = "list card" ng-repeat="doc in documents" href="#/app/document/{{doc._id}}">
+          <div class="item item-divider">
+              {{doc.title}}
+            </div>
+
+            <div class="item item-body">
+                <img ng-if = "getImage(doc)" id = "image-{{doc._id}}" class="full-image">
+                <p>
+                  {{doc.desc}}
+                </p>
+            </div>
+    </div>
     </ion-list>
 
     <div class = "feedSpinnerContainer" ng-if = "documents.length < 1 && loading == false">

@@ -286,8 +286,16 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('HomeCtrl', function($scope) {
+.controller('HomeCtrl', function($scope, $cordovaFileTransfer) {
 
+    //Return the image file in the images array
+    $scope.getImage = function (doc) {
+        //Loop through and see if it has an image file
+        for(var i = 0; i < doc.images.length; i++)
+        {
+            if(doc.images[i].endswith())
+        }
+    }
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams) {
