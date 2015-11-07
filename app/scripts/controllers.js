@@ -92,8 +92,9 @@ angular.module('starter.controllers', [])
             password: $scope.regData.password
         };
 
-        User.join(payload, function(status, data){
-            console.log(data);
+        User.join(payload, function(data, status){
+            window.localStorage.setItem("sessionToken", data.token);
+            window.localStorage.setItem("key", $scope.regData.key);
             $scope.closeLogin();
         }, function(){
             alert("FAILURE!");
@@ -111,8 +112,9 @@ angular.module('starter.controllers', [])
             password: $scope.loginData.password
         };
 
-        User.login(payload, function(status, data){
-            console.log(data);
+        User.login(payload, function(data, status){
+            window.localStorage.setItem("sessionToken", data.token);
+            window.localStorage.setItem("key", $scope.loginData.key);
             $scope.closeLogin();
         }, function(){
             alert("FAILURE!");
