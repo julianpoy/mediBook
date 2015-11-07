@@ -129,7 +129,11 @@ angular.module('starter.controllers', [])
 
 .controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Document, $timeout) {
 
+    //Initialize the new document
     $scope.newDoc = {};
+
+    //Grab the sessionToken
+    $scope.sessionToken = sessionToken = window.localStorage.getItem("sessionToken");
 
     //Initialize the files array
     $scope.uploadImage;
