@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var conn = mongoose.connection;
+var crypto = require('crypto');
 var SessionService = require('../services/sessions.js');
 var Session = mongoose.model('Session');
 var Document = mongoose.model('Document');
+var Grid = require('gridfs-stream');
+var fs = require('fs');
 
 /* Create a Document */
 router.post('/', function(req, res) {
@@ -39,5 +43,67 @@ router.post('/', function(req, res) {
         }
     });
 });
+
+/* Create a File */
+router.post('/file', function(req, res) {
+    Grid.mongo = mongoose.mongo;
+    var gfs = Grid(conn.db);
+
+    var part = req.files.filefield;
+
+    var cryptoName = crypto.randomBytes(48).toString('hex');
+
+    var writeStream = gfs.createWriteStream({
+        filename: cryptoName,
+        mode: 'w',
+        content_type:part.mimetype
+    });
+
+    writeStream.on('close', function() {
+         return res.status(200).send({
+            filename: cryptoName
+        });
+    });
+
+    writeStream.write(part.data);
+
+    writeStream.end();
+});
+
+/* Fetch a File */
+router.get('/file/:filename', function(req, res) {
+    Grid.mongo = mongoose.mongo;
+    var gfs = Grid(conn.db);
+
+    gfs.files.find({ filename: req.params.filename }).toArray(function (err, files) {
+
+ 	    if(files.length===0){
+			return res.status(400).send({
+				message: 'File not found'
+			});
+ 	    }
+
+		res.writeHead(200, {'Content-Type': files[0].contentType});
+
+		var readstream = gfs.createReadStream({
+			  filename: files[0].filename
+		});
+
+	    readstream.on('data', function(data) {
+	        res.write(data);
+	    });
+
+	    readstream.on('end', function() {
+	        res.end();
+	    });
+
+		readstream.on('error', function (err) {
+		  console.log('An error occurred!', err);
+		  throw err;
+		});
+	});
+});
+
+
 
 module.exports = router;
