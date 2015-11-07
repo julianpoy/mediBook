@@ -53,7 +53,8 @@
                     ng-disabled = "loading ||
                     !loginData.username ||
                     !loginData.password ||
-                    !loginData.key">Log in</button>
+                    !loginData.key ||
+                    loginData.key.length < 8">Log in</button>
                 </label>
           </div>
 
@@ -97,7 +98,7 @@
           <span class="input-label">Encryption key Confirm</span>
           <input type="text" ng-model="regData.keyConfirm">
         </label>
-        
+
         <label ng-show = "!confirmed" class="item">
             <button class="button button-outline button-positive"
             ng-click = "showRegConfirm()"
