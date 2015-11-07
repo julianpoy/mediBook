@@ -56,6 +56,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AuthCtrl', function($scope, $timeout) {
+
     //Show The Next Page
     $scope.showNextPage = function() {
 
@@ -70,6 +71,15 @@ angular.module('starter.controllers', [])
             //Show the next page
             $scope.showPageTwo = true;
         }, 1000);
+    }
+
+    //Show the register confirmation
+    $scope.showRegConfirm = function () {
+
+        //Show the confrmation
+        $timeout(function () {
+            $scope.confirmed = true;
+        }, 0);
     }
 
     //Register the User

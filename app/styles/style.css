@@ -7,6 +7,12 @@
     margin-right: auto;
 }
 
+.title {
+    font-size: 28px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
 /*Loading Spinner */
 .ionicSpinner svg{
     width: 75px;
@@ -20,6 +26,22 @@
 
 .button-outline {
     width: 100%;
+}
+
+.radioAuthList {
+    margin-top: 20px;
+}
+
+.loginInput {
+    margin-top: 40px;
+}
+
+.keyDec {
+    margin-bottom: 10px;
+}
+
+.keyConfirmDesc {
+    margin-top: 20px;
 }
 
 .authFormPageOne.ng-hide {
