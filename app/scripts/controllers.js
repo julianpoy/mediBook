@@ -103,13 +103,14 @@ angular.module('starter.controllers', [])
               var decryptedDocs = [];
 
               //Decrypt all of the files in the data
-              for(var i; i < data.length; i++)
+              for(var i=0; i < data.length; i++)
               {
+                  decryptedDocs[i] = {};
                   //Decrypt the title
                   var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
 
                   //Check if it decrypted correctly
-                  if(!/^data:/.test(decryptedTitle)){
+                  if(/^data:/.test(decryptedTitle)){
                       alert("Invalid decryption key! Please log in!");
                         $scope.modal.show();
                       break;
@@ -122,7 +123,7 @@ angular.module('starter.controllers', [])
                     var decryptedDesc = CryptoJS.AES.decrypt(data[i].body, encryptKey).toString(CryptoJS.enc.Latin1);
 
                     //Check if it decrypted correct
-                    if(!/^data:/.test(decryptedDesc)){
+                    if(/^data:/.test(decryptedDesc)){
                           alert("Invalid decryption key! Please log in!");
                           $scope.modal.show();
                           break;
@@ -134,8 +135,6 @@ angular.module('starter.controllers', [])
 
               //Set the decyption object
               $scope.documents = decryptedDocs;
-
-              console.log($scope.documents);
 
               //Stop the spinner
               $scope.loading = false;
