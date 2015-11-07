@@ -7,7 +7,7 @@ angular.module('starter.controllers', [])
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  //})
 
   // Form data for the login modal
   $scope.loginData = {};
@@ -16,7 +16,17 @@ angular.module('starter.controllers', [])
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
   }).then(function(modal) {
+
+    //Create the modal
     $scope.modal = modal;
+
+    //Look for the session Token
+    var sessionToken;
+    if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
+    else {
+        //Open the login modal
+        $scope.modal.show();
+    }
   });
 
   // Triggered in the login modal to close it
