@@ -268,7 +268,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Document, $timeout) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Documents, $timeout) {
 
     //Initialize the new document
     $scope.newDoc = {};
@@ -355,7 +355,7 @@ angular.module('starter.controllers', [])
 
                 alert("dfd");
 
-                Document.create(payload, function(data, status) {
+                Documents.create(payload, function(data, status) {
                     alert("dfd2");
                 }, function(err){
                     alert(angular.toJson(err));
