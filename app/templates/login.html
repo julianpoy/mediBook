@@ -6,7 +6,9 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doLogin()">
+      <!-- Loading Spinner -->
+      <ion-spinner class = "spinner-positive ionicSpinner" ng-show = "loading"></ion-spinner>
+    <form>
 
     <h4 class = "center">Welcome to MediBook! The Secure medical information storage app. Please Login or Register</h4>
 
@@ -44,6 +46,9 @@
               <span class="input-label">Encryption Key</span>
               <input type="password" ng-model="loginData.key">
             </label>
+            <label class="item">
+                <button class="button button-block button-positive" type="submit" ng-click = "loginUser()" ng-disabled = "loading">Log in</button>
+            </label>
       </div>
 
       <div class = "loginInput" ng-show = "authType != 'login' && authType != null">
@@ -53,7 +58,10 @@
             </label>
             <label class="item item-input">
               <span class="input-label">Password</span>
-              <input type="text" ng-model="regData.password">
+              <input type="text" ng-model="regData.password" >
+            </label>
+            <label class="item">
+                <button class="button button-block button-positive" ng-click = "registerUser()" ng-disabled = "loading">Register</button>
             </label>
       </div>
 

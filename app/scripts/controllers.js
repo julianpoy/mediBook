@@ -43,12 +43,28 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+        // Simulate a login delay. Remove this and replace with your login
+        // code if using a login system
+        $timeout(function() {
+          $scope.closeLogin();
+        }, 1000);
   };
+
+  //Register the User
+  $scope.registerUser = function () {
+      //Set Loading to true
+      $scope.loading = true;
+  }
+
+  //Login the User
+  $scope.loginUser = function () {
+      //Set Loading to true
+      $scope.loading = true;
+  }
+
+
+
+// END APP CONTROLLER
 })
 
 .controller('PlaylistsCtrl', function($scope) {
