@@ -106,5 +106,6 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('DocumentCtrl', function($scope, $stateParams) {
+
 });
