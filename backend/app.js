@@ -10,6 +10,7 @@ var mongo = require('mongodb');
 var db = require('./models/db');
 var users = require('./models/users');
 var sessions = require('./models/sessions');
+var documents = require('./models/documents');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
