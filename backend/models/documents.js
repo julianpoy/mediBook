@@ -12,10 +12,7 @@ var Document = new mongoose.Schema({
     },
     images: [{
         type: String
-    }],
-    token: {
-        type: String
-    }
+    }]
 });
 
 mongoose.model('Document', Document);
