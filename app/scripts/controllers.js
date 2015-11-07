@@ -353,10 +353,10 @@ angular.module('starter.controllers', [])
                     images: imageArray
                 };
 
-                alert("dfd");
-
                 Documents.create(payload, function(data, status) {
                     alert("dfd2");
+
+                    //Go Back Home
                 }, function(err){
                     alert(angular.toJson(err));
                 });
