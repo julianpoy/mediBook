@@ -278,6 +278,9 @@ angular.module('starter.controllers', [])
     //Initialize the new document
     $scope.newDoc = {};
 
+    //Initialize the images array
+    $scope.addedFiles = [];
+
     //Grab the sessionToken
     $scope.sessionToken = sessionToken = window.localStorage.getItem("sessionToken");
 
@@ -290,7 +293,7 @@ angular.module('starter.controllers', [])
 
     $scope.getDoc = function(target){
         var file = target.files[0];
-        $scope.uploadImage = file.name;
+        $scope.addedFiles.push(file.name);
         $scope.$apply();
     };
 
@@ -304,7 +307,7 @@ angular.module('starter.controllers', [])
     };
 
     $cordovaImagePicker.getPictures().then(function(imageData) {
-        $scope.uploadImage = imageData[0];
+        $scope.addedFiles.push(imageData[0]);
     }, function(err) {
         alert("Failed because: " + err);
         console.log('Failed because: ' + err);
@@ -325,7 +328,7 @@ angular.module('starter.controllers', [])
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
             //save the image URI
-            $scope.uploadImage = imageData;
+            $scope.addedFiles.push(imageData);
 
         }, function(err) {
             alert("Failed because: " + err);
@@ -336,35 +339,32 @@ angular.module('starter.controllers', [])
     //Submit the document to the backend
     $scope.submitDoc = function() {
 
-        //First check if we added any files
-        if($scope.uploadImage)
+        //Our backend url and the file we would like to upload
+        var uploadUrl = "http://mangorabo.ngrok.kondeo.com:8080/documents/file";
+        //var file = $scope.uploadImage;
+
+        //Get our encrypt Key
+        var encryptKey = window.localStorage.getItem("key");
+
+        //First Encrypt the title
+        var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey).toString(CryptoJS.enc.Latin1);
+
+        //Then Encrypt the description
+        //First Encrypt the title
+        var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey).toString(CryptoJS.enc.Latin1);
+
+        //Our array of images
+        var imageArray = [];
+
+        for(var i = 0; i < $scope.addedFiles; i++)
         {
-            //Our backend url and the file we would like to upload
-            var uploadUrl = "http://mangorabo.ngrok.kondeo.com:8080/documents/file";
-            var file = $scope.uploadImage;
+            //Encryt the image
+            var encryptImg = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey).toString(CryptoJS.enc.Latin1);
 
-            var options = {};
-
-            $cordovaFileTransfer.upload(uploadUrl, file, options, true).then(function(result) {
+            $cordovaFileTransfer.upload(uploadUrl, encryptImg, options, true).then(function(result) {
                 var imageName = JSON.parse(result.response);
 
-                var imageArray = [];
                 imageArray.push(imageName.filename);
-
-                var payload = {
-                    sessionToken: $scope.sessionToken,
-                    title: $scope.newDoc.title,
-                    body: $scope.newDoc.desc,
-                    images: imageArray
-                };
-
-                Documents.create(payload, function(data, status) {
-                    alert("dfd2");
-
-                    //Go Back Home
-                }, function(err){
-                    alert(angular.toJson(err));
-                });
 
               }, function(err) {
                 alert(err);
@@ -374,6 +374,23 @@ angular.module('starter.controllers', [])
                 })
               });
         }
+
+
+          //Now create our payload to send to the backend
+          var payload = {
+              sessionToken: $scope.sessionToken,
+              title: encryptTitle,
+              body: encryptDesc,
+              images: imageArray
+          };
+
+          Documents.create(payload, function(data, status) {
+              alert("dfd2");
+
+              //Go Back Home
+          }, function(err){
+              alert(angular.toJson(err));
+          });
     }
 })
 

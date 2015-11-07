@@ -17,12 +17,12 @@
         ng-if = "file.endsWith('.jpg') ||
         file.endsWith('.png') ||
         file.endsWith('.jpeg')"
-         ng-src = "{{cameraPhoto}}" />
+         ng-src = "{{file}}" />
 
          <!-- Show the file name if it is just a file -->
          <div class = "center"
-         ng-if = "!file.endsWith('.jpg') ||
-         !file.endsWith('.png') ||
+         ng-if = "!file.endsWith('.jpg') &&
+         !file.endsWith('.png') &&
          !file.endsWith('.jpeg')">{{file}}</div>
 
     </ion-item>
