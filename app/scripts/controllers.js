@@ -25,7 +25,7 @@ angular.module('starter.controllers', [])
     if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
-        //$scope.modal.show();
+        $scope.modal.show();
     }
   });
 
@@ -55,7 +55,7 @@ angular.module('starter.controllers', [])
 // END APP CONTROLLER
 })
 
-.controller('AuthCtrl', function($scope, $timeout) {
+.controller('AuthCtrl', function($scope, $timeout, User) {
 
     //Show The Next Page
     $scope.showNextPage = function() {
@@ -86,12 +86,39 @@ angular.module('starter.controllers', [])
     $scope.registerUser = function () {
         //Set Loading to true
         $scope.loading = true;
+
+        var payload = {
+            username: $scope.regData.username,
+            password: $scope.regData.password
+        };
+
+        User.join(payload, function(data, status){
+            window.localStorage.setItem("sessionToken", data.token);
+            window.localStorage.setItem("key", $scope.regData.key);
+            $scope.closeLogin();
+        }, function(){
+            alert("FAILURE!");
+        });
+
     }
 
     //Login the User
     $scope.loginUser = function () {
         //Set Loading to true
         $scope.loading = true;
+
+        var payload = {
+            username: $scope.loginData.username,
+            password: $scope.loginData.password
+        };
+
+        User.login(payload, function(data, status){
+            window.localStorage.setItem("sessionToken", data.token);
+            window.localStorage.setItem("key", $scope.loginData.key);
+            $scope.closeLogin();
+        }, function(){
+            alert("FAILURE!");
+        });
     }
 })
 

@@ -19,13 +19,13 @@ return {
 }
 }])
 
-.factory('Book', ['$resource', function($resource) {
+.factory('User', ['$resource', function($resource) {
 
-return $resource( 'http://dev.kondeo.com/mwwwordpairs/backend/' + 'users.php/:Id',
+return $resource( 'http://localhost:3000/' + 'users/:Id',
     { Id: '@Id' }, {
-        register: {
+        join: {
             method: 'POST',
-            params: { Id: 'register' },
+            params: { Id: 'join' },
             isArray: false
         },
 
