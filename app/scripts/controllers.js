@@ -127,7 +127,10 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $http) {
+
+    //Initialize the files array
+    $scope.addedFiles = {};
 
     //Get a photo from the gallery
     //http://learn.ionicframework.com/formulas/cordova-camera/
@@ -161,7 +164,7 @@ angular.module('starter.controllers', [])
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
             //save the image URI
-            $scope.cameraPhoto = imageData;
+            $scope.addedFiles.push(imageData);
 
         }, function(err) {
             alert("Failed because: " + err);
@@ -171,7 +174,28 @@ angular.module('starter.controllers', [])
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
-        
+
+        //First check if we added any files
+        if($scope.addedFiles[0])
+        {
+            //Our backend url and the file we would like to upload
+            var uploadUrl = "http://localhost:3000/documents/file";
+            var file = $scope.addedFiles[i];
+
+            //Create our form data object, and add the title and description
+            var fd = new FormData();
+            if(file) fd.append('file', file);
+            $http.post(uploadUrl, fd, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            })
+            .success(function(){
+                //Show Success Toast and redirect back home
+            })
+            .error(function(){
+                //Display error toast
+            });
+        }
     }
 })
 
