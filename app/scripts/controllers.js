@@ -202,6 +202,7 @@ angular.module('starter.controllers', [])
                 imageArray.push(imageName.filename);
 
                 var payload = {
+                    sessionToken: $scope.sessionToken,
                     title: $scope.newDoc.title,
                     body: $scope.newDoc.desc,
                     images: imageArray
