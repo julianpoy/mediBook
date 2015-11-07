@@ -25,7 +25,7 @@ angular.module('starter.controllers', [])
     if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
-        $scope.modal.show();
+        //$scope.modal.show();
     }
   });
 
@@ -93,6 +93,10 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
     }
+})
+
+.controller('NewCtrl', function($scope, $stateParams) {
+    
 })
 
 .controller('PlaylistsCtrl', function($scope) {
