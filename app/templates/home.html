@@ -1,0 +1,31 @@
+<ion-view view-title="Home">
+  <ion-content>
+
+      <!-- Loading Spinner -->
+      <div class = "feedSpinnerContainer" ng-show = "loading">
+          <ion-spinner class = "spinner-positive ionicSpinner"></ion-spinner>
+          <h4 class = "center spinnerText">Downloading and decrypting your documents. This may take a short while...</h4>
+      </div>
+
+    <ion-list>
+      <div class = "list card" ng-repeat="doc in documents" href="#/app/document/{{doc._id}}">
+          <div class="item item-divider">
+              {{doc.title}}
+            </div>
+
+            <div class="item item-body">
+                <img ng-if = "getImage(doc)" id = "image-{{doc._id}}" class="full-image">
+                <p>
+                  {{doc.desc}}
+                </p>
+            </div>
+    </div>
+    </ion-list>
+
+    <div class = "feedSpinnerContainer" ng-if = "documents.length < 1 && loading == false">
+        <h4 class = "center">No Documents Found. Please Create one by tapping the + above!</h4>
+    </div>
+
+
+  </ion-content>
+</ion-view>

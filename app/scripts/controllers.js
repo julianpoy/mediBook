@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -14,20 +14,40 @@ angular.module('starter.controllers', [])
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
+    scope: $scope,
+    backdropClickToClose: false,
+    hardwareBackButtonClose: false
   }).then(function(modal) {
 
     //Create the modal
     $scope.modal = modal;
 
     //Look for the session Token
-    var sessionToken;
-    if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
+    $scope.sessionToken;
+    if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
         $scope.modal.show();
     }
   });
+
+  //Reinitialize modal
+  $scope.reInitModal = function() {
+
+      $scope.modal = null;
+
+      $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: $scope,
+        backdropClickToClose: false,
+        hardwareBackButtonClose: false
+      }).then(function(modal) {
+
+        //Create the modal
+        $scope.modal = modal;
+    });
+  }
+
+  if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -37,28 +57,133 @@ angular.module('starter.controllers', [])
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
+
+    //Check if they have their session token
+    if(window.localStorage.getItem("sessionToken")) {
+        //Allow them to exit the login
+        $timeout(function () {
+            $scope.modal.backdropClickToClose = true;
+            $scope.modal.hardwareBackButtonClose = true;
+        }, 0);
+    }
+    else {
+        //Allow them to exit the login
+        $timeout(function () {
+            $scope.modal.backdropClickToClose = false;
+            $scope.modal.hardwareBackButtonClose = true;
+        }, 0);
+    }
+
   };
 
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+  $scope.documents = {};
 
-        // Simulate a login delay. Remove this and replace with your login
-        // code if using a login system
-        $timeout(function() {
-          $scope.closeLogin();
-        }, 1000);
-  };
+  //Query the backend for the documents
+  $scope.getDocuments = function () {
 
+      //Check if we have the documents already
+      if($scope.sessionToken)
+      {
+          //Create the documents object
+          $scope.documents = [];
 
+          //Set Loading to true
+          $scope.loading = true;
+
+          if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+          var payload = {
+              sessionToken: $scope.sessionToken
+          };
+
+          Documents.get(payload, function(data, status) {
+
+              //Get the key from localstorage to decrypt
+              var encryptKey = window.localStorage.getItem("key");
+
+              var decryptedDocs = [];
+
+              //Decrypt all of the files in the data
+              for(var i; i < data.length; i++)
+              {
+                  //Decrypt the title
+                  var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                  //Check if it decrypted correctly
+                  if(!/^data:/.test(decryptedTitle)){
+                      alert("Invalid decryption key! Please log in!");
+                        $scope.modal.show();
+                      break;
+                  }
+
+                    //Set the Title to our decrypted object
+                    decryptedDocs[i].title = decryptedTitle;
+
+                    //Decrypt the description
+                    var decryptedDesc = CryptoJS.AES.decrypt(data[i].body, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                    //Check if it decrypted correct
+                    if(!/^data:/.test(decryptedDesc)){
+                          alert("Invalid decryption key! Please log in!");
+                          $scope.modal.show();
+                          break;
+                      }
+
+                    //Set it to decryption object
+                    decryptedDocs[i].body = decryptedDesc;
+
+                    //Decrypt all the files and images
+                    for(var j = 0; j < data.images.length; j++)
+                    {
+                        //Init the images array
+                        decryptedDocs[i].images = [];
+
+                        //Decrypt the images/files
+                        var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
+
+                        //check if decrypted correctly
+                        if(!/^data:/.test(decryptedDesc)){
+                              alert("Invalid decryption key! Please log in!");
+                              $scope.modal.show();
+                              break;
+                          }
+
+                        //Save to decryption object
+                        decryptedDocs[i].images[j] = decryptedImg;
+
+                    }
+              }
+
+              //Set the decyption object
+              $scope.documents = decryptedDocs;
+
+              //Stop the spinner
+              $scope.loading = false;
+
+          }, function(){
+              alert("FAILURE!");
+          });
+      }
+  }
+
+  $scope.getDocuments();
 
 // END APP CONTROLLER
 })
 
 .controller('AuthCtrl', function($scope, $timeout, User) {
 
+    $scope.showPageOne = true;
+    $scope.confirmed = false;
+    $scope.regData = {};
+    $scope.loginData = {};
+    //Get the session Token
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
     //Show The Next Page
     $scope.showNextPage = function() {
+
+        console.log($scope.showPageOne);
 
        //Timeout to apply the variable change
        $timeout(function () {
@@ -84,6 +209,8 @@ angular.module('starter.controllers', [])
 
     //Register the User
     $scope.registerUser = function () {
+
+        console.log("boo");
         //Set Loading to true
         $scope.loading = true;
 
@@ -96,6 +223,13 @@ angular.module('starter.controllers', [])
             window.localStorage.setItem("sessionToken", data.token);
             window.localStorage.setItem("key", $scope.regData.key);
             $scope.closeLogin();
+
+            $scope.getDocuments();
+
+            //Re init the modal
+            $timeout(function () {
+                $scope.reInitModal();
+            }, 10);
         }, function(){
             alert("FAILURE!");
         });
@@ -116,6 +250,13 @@ angular.module('starter.controllers', [])
             window.localStorage.setItem("sessionToken", data.token);
             window.localStorage.setItem("key", $scope.loginData.key);
             $scope.closeLogin();
+
+            $scope.getDocuments();
+
+            //Re init the modal
+            $timeout(function () {
+                $scope.reInitModal();
+            }, 10);
         }, function(){
             alert("FAILURE!");
         });
@@ -129,7 +270,7 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 75,
+        quality: 75
 
     };
 
@@ -161,15 +302,9 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('HomeCtrl', function($scope, $cordovaFileTransfer, Documents) {
+
+
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams) {
