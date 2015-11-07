@@ -3,12 +3,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var User = new mongoose.Schema({
-
     username: {
         type: String
     },
     password: {
-        type: String,
+        type: String
     },
     salt: {
         type: String
