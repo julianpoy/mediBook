@@ -48,7 +48,7 @@ router.post('/file', function(req, res) {
     Grid.mongo = mongoose.mongo;
     var gfs = Grid(conn.db);
 
-    var part = req.files.filefield;
+    var part = req.files.file;
 
     var cryptoName = crypto.randomBytes(48).toString('hex');
 

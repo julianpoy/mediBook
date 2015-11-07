@@ -24,8 +24,13 @@
          ng-if = "!file.endsWith('.jpg') ||
          !file.endsWith('.png') ||
          !file.endsWith('.jpeg')">{{file}}</div>
-         
+
     </ion-item>
+
+    <button class="button button-outline button-positive newButton"
+    ng-click = "docSelect()">Add File From Documents</button>
+
+    <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/>
 
     <button class="button button-outline button-positive newButton"
     ng-click = "getPhoto()">Add Image From Gallery</button>
