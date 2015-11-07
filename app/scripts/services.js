@@ -1,6 +1,6 @@
 angular.module('starter.services', ['ngResource'])
 
-
+//Function to use the cordova camera on ionic
 .factory('Camera', ['$q', function($q) {
 
 return {

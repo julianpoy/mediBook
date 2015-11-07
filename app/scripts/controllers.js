@@ -102,14 +102,10 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-        mediaType: Camera.MediaType.ALLMEDIA,
-        saveToPhotoAlbum: true
+        quality: 75
     };
 
-    $cordovaCamera.getPicture(options).then(function(imageData) {
+    $cordovaCamera.getPicture().then(function(imageData) {
         console.log("img URI= " + imageData);
         //Here you will be getting image data
     }, function(err) {
