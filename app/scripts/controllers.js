@@ -143,7 +143,9 @@ angular.module('starter.controllers', [])
     }
 
     //Submit the document to the backend
-
+    $scope.submitDoc = function() {
+        
+    }
 })
 
 .controller('PlaylistsCtrl', function($scope) {
