@@ -32,7 +32,7 @@ angular.module('starter.controllers', [])
     if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
-        //$scope.modal.show();
+        $scope.modal.show();
     }
   });
 
