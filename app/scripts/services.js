@@ -25,7 +25,7 @@ return $resource( 'http://localhost:3000/' + 'users/:Id',
     { Id: '@Id' }, {
         join: {
             method: 'POST',
-            params: { Id: 'register' },
+            params: { Id: 'join' },
             isArray: false
         },
 
