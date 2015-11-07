@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -48,6 +48,12 @@ angular.module('starter.controllers', [])
   }
 
   if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Go to a new state
+    $scope.navigatePage = function(stateName, params) {
+        console.log(params);
+        $state.go(stateName, params);
+    }
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -131,6 +137,9 @@ angular.module('starter.controllers', [])
 
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
+
+                    //Also get their id
+                    decryptedDocs[i]._id = data[i]._id;
               }
 
               //Set the decyption object
@@ -313,6 +322,67 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams) {
+.controller('DocumentCtrl', function($scope, $stateParams, DocumentById) {
+
+    //Get the sessionToken
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Get the document object by Id
+    $scope.getDocument = function() {
+
+        //Create the payload
+        var payload = {
+            sessionToken: $scope.sessionToken,
+            id:  $stateParams.documentId
+        };
+
+        //Send to the backend
+        DocumentById.get(payload, function (data, status) {
+
+            //Success
+
+            //Initialize the document object
+            $scope.document = {};
+
+            //Get the key from localstorage to decrypt
+            var encryptKey = window.localStorage.getItem("key");
+
+            //Decrypt the title
+            var decryptedTitle = CryptoJS.AES.decrypt(data.title, encryptKey).toString(CryptoJS.enc.Latin1);
+
+            //Check if it decrypted correctly
+            if(/^data:/.test(decryptedTitle)) {
+                alert("Invalid decryption key! Please log in!");
+                  $scope.modal.show();
+            }
+
+              //Set the Title to our decrypted object
+              $scope.document.title = decryptedTitle;
+
+              //Decrypt the description
+              var decryptedDesc = CryptoJS.AES.decrypt(data.body, encryptKey).toString(CryptoJS.enc.Latin1);
+
+              //Check if it decrypted correct
+              if(/^data:/.test(decryptedDesc)){
+                    alert("Invalid decryption key! Please log in!");
+                    $scope.modal.show();
+                }
+
+              //Set it to decryption object
+              $scope.document.body = decryptedDesc;
+
+              //Also get their id
+              $scope.document._id = data._id;
+
+        }, function () {
+            //FAILURE
+            console.log("GAME OVER! Could not get document");
+        })
+
+    }
+
+    //Get the User
+    $scope.getDocument();
+
 
 });

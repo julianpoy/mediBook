@@ -38,4 +38,18 @@ return $resource( 'http://localhost:3000' + '/documents',
 
     } );
 
+}])
+
+.factory('DocumentById', ['$resource', function($resource) {
+
+return $resource( 'http://localhost:3000' + '/documents/:id',
+    { id: '@id' }, {
+        get: {
+            method: 'GET',
+            params: { id: '@id' },
+            isArray: false
+        }
+
+    } );
+
 }]);
