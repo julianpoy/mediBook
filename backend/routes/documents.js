@@ -103,6 +103,55 @@ router.get('/file/:filename', function(req, res) {
 	});
 });
 
+/* Find my document from id */
+router.get('/:id', function(req, res) {
+    Document.findOne({
+            _id: req.params.id
+        })
+        .select()
+        .exec(function(err, document) {
+            if (err) {
+                return res.status(500).json({
+                    msg: "Couldn't query the database for locations!"
+                });
+            } else {
+                getImages(document, 0, document.images.length);
+
+                function getImages(data, i, length){
+                    if(i < length){
+                        gfs.files.find({ filename: data.images[i] }).toArray(function (err, files) {
+
+                     	    if(files.length===0){
+                    			return res.status(400).send({
+                    				message: 'File not found'
+                    			});
+                     	    }
+
+                    		var readstream = gfs.createReadStream({
+                    			  filename: files[0].filename
+                    		});
+
+                    	    readstream.on('data', function(data) {
+                    	        data.fileOut[i] = data;
+                    	    });
+
+                    		readstream.on('error', function (err) {
+                    		  console.log('An error occurred!', err);
+                    		});
+                    	});
+                        getImages(data, i+1, length);
+                    } else {
+                        finishImages(data);
+                    }
+                }
+
+                function finishImages(data){
+                    res.status(200).json(data);
+                }
+            }
+        });
+});
+
 /* Update a Document */
 router.put('/:id', function(req, res) {
     if (!req.body.sessionToken) {
