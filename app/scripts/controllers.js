@@ -95,7 +95,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera) {
+.controller('NewCtrl', function($scope, Camera, $cordovaCamera) {
 
     //Get a photo from the gallery
     //http://stackoverflow.com/questions/31337017/open-the-image-gallery-with-ionic-angularjs

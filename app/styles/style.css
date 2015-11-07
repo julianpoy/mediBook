@@ -25,7 +25,9 @@
 }
 
 .button-outline {
-    width: 100%;
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .radioAuthList {
@@ -50,6 +52,11 @@
 
 .authFormPageTwo {
   animation: fadeInUp 1s;
+}
+
+.newButton {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /* Fading Ng-hide */

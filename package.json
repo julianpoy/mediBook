@@ -2,7 +2,9 @@
   "name": "Tempionic",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "angular-resource": "^1.4.7"
+  },
   "devDependencies": {
     "cordova": "~4.2.0",
     "elementtree": "0.1.6",
