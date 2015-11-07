@@ -14,7 +14,7 @@ angular.module('starter.controllers', [])
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scopem
+    scope: $scope,
     backdropClickToClose: false,
     hardwareBackButtonClose: false
   }).then(function(modal) {
@@ -41,11 +41,18 @@ angular.module('starter.controllers', [])
     $scope.modal.show();
 
     //Check if they have their session token
-    if(window.localStorage.getItem("sessionToken")) {
+    if(sessionToken || window.localStorage.getItem("sessionToken")) {
         //Allow them to exit the login
         $timeout(function () {
             $scope.modal.backdropClickToClose = true;
             $scope.modal.hardwareBackButtonClose = true;
+        }, 0);
+    }
+    else {
+        //Allow them to exit the login
+        $timeout(function () {
+            $scope.modal.backdropClickToClose = false;
+            $scope.modal.hardwareBackButtonClose = false;
         }, 0);
     }
 
