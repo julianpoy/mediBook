@@ -88,6 +88,8 @@ angular.module('starter.controllers', [])
           //Set Loading to true
           $scope.loading = true;
 
+          if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
           var payload = {
               sessionToken: $scope.sessionToken
           };
