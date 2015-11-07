@@ -2,7 +2,9 @@
   "name": "Tempionic",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "angular-resource": "^1.4.7"
+  },
   "devDependencies": {
     "cordova": "~4.2.0",
     "elementtree": "0.1.6",
@@ -55,6 +57,21 @@
     "com.ionic.keyboard",
     "org.apache.cordova.device",
     "org.apache.cordova.console",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    "org.apache.cordova.device",
+    "org.apache.cordova.device",
+    "org.apache.cordova.console",
+    "com.ionic.keyboard",
+    {
+      "locator": "https://github.com/wymsee/cordova-imagePicker.git",
+      "id": "com.synconset.imagepicker"
+    },
+    {
+      "locator": "http://github.com/don/cordova-filechooser.git",
+      "id": "com.megster.cordova.FileChooser"
+    }
+  ],
+  "cordovaPlatforms": [
+    "android"
   ]
 }

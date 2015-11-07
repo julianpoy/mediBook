@@ -2,8 +2,10 @@
   "name": "Tempionic",
   "version": "0.0.0",
   "dependencies": {
+    "angular-resource": "~1.4.7",
     "ionic": "v1.0.0-rc.3",
-    "ngCordova": "v0.1.14-alpha"
+    "ng-file-upload": "~9.1.2",
+    "ngCordova": "~0.1.20-alpha"
   },
   "devDependencies": {
     "angular-mocks": "~1.3.6",
@@ -13,4 +15,3 @@
     "angular": ">= 1.3.6"
   }
 }
-
