@@ -7,7 +7,7 @@ angular.module('starter.controllers', [])
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  //})
 
   // Form data for the login modal
   $scope.loginData = {};
@@ -16,7 +16,17 @@ angular.module('starter.controllers', [])
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
   }).then(function(modal) {
+
+    //Create the modal
     $scope.modal = modal;
+
+    //Look for the session Token
+    var sessionToken;
+    if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
+    else {
+        //Open the login modal
+        $scope.modal.show();
+    }
   });
 
   // Triggered in the login modal to close it
@@ -33,12 +43,28 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+        // Simulate a login delay. Remove this and replace with your login
+        // code if using a login system
+        $timeout(function() {
+          $scope.closeLogin();
+        }, 1000);
   };
+
+  //Register the User
+  $scope.registerUser = function () {
+      //Set Loading to true
+      $scope.loading = true;
+  }
+
+  //Login the User
+  $scope.loginUser = function () {
+      //Set Loading to true
+      $scope.loading = true;
+  }
+
+
+
+// END APP CONTROLLER
 })
 
 .controller('PlaylistsCtrl', function($scope) {
