@@ -139,4 +139,38 @@ router.put('/:id', function(req, res) {
     });
 });
 
+/* Delete a Document */
+router.delete('/:id', function(req, res) {
+    if (!req.body.sessionToken) {
+        return res.status(412).json({
+            msg: "Requirements not met!"
+        });
+    }
+    SessionService.validateSession(req.body.sessionToken, function(err, userId) {
+        if (err) {
+            res.json(err);
+        } else {
+            Document.findOne({
+                    _id: req.params.id,
+                    userId: userId
+                })
+                .remove(function(err, document) {
+                    if (err) {
+                        return res.status(500).json({
+                            msg: "Document DB error!"
+                        });
+                    } else if (!document) {
+                        res.status(409).json({
+                            msg: "No document with that ID!"
+                        });
+                    } else {
+                        res.status(200).json({
+                            msg: "Deleted"
+                        });
+                    }
+                });
+        }
+    });
+});
+
 module.exports = router;
