@@ -76,7 +76,8 @@ angular.module('starter.controllers', [])
 
   };
 
-  $scope.documents = {};
+  $scope.documents = [];
+  $scope.loading = false;
 
   //Query the backend for the documents
   $scope.getDocuments = function () {
@@ -84,8 +85,6 @@ angular.module('starter.controllers', [])
       //Check if we have the documents already
       if($scope.sessionToken)
       {
-          //Create the documents object
-          $scope.documents = [];
 
           //Set Loading to true
           $scope.loading = true;
@@ -131,31 +130,12 @@ angular.module('starter.controllers', [])
 
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
-
-                    //Decrypt all the files and images
-                    for(var j = 0; j < data.images.length; j++)
-                    {
-                        //Init the images array
-                        decryptedDocs[i].images = [];
-
-                        //Decrypt the images/files
-                        var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
-
-                        //check if decrypted correctly
-                        if(!/^data:/.test(decryptedDesc)){
-                              alert("Invalid decryption key! Please log in!");
-                              $scope.modal.show();
-                              break;
-                          }
-
-                        //Save to decryption object
-                        decryptedDocs[i].images[j] = decryptedImg;
-
-                    }
               }
 
               //Set the decyption object
               $scope.documents = decryptedDocs;
+
+              console.log($scope.documents);
 
               //Stop the spinner
               $scope.loading = false;
