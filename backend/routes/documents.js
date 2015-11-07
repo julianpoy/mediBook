@@ -43,6 +43,29 @@ router.post('/', function(req, res) {
     });
 });
 
+/* Get User Documents */
+router.get('/', function(req, res) {
+    SessionService.validateSession(req.body.sessionToken, function(err, userId) {
+        if (err) {
+            res.json(err);
+        } else {
+            Document.find({
+                    _id: userId
+                })
+                .select()
+                .exec(function(err, data) {
+                    if (err) {
+                        return res.status(500).json({
+                            msg: "Couldn't query the database for documents!"
+                        });
+                    } else {
+                        res.status(200).json(data);
+                    }
+                });
+            }
+        });
+});
+
 /* Create a File */
 router.post('/file', function(req, res) {
     Grid.mongo = mongoose.mongo;
