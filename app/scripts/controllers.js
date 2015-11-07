@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -75,6 +75,23 @@ angular.module('starter.controllers', [])
     }
 
   };
+
+  //Query the backend for the documents
+  $scope.getDocuments = function () {
+      //Set Loading to true
+      $scope.loading = true;
+
+      var payload = {
+          username: $scope.loginData.username,
+          password: $scope.loginData.password
+      };
+
+      Documents.get(payload, function(data, status){
+
+      }, function(){
+          alert("FAILURE!");
+      });
+  }
 
 // END APP CONTROLLER
 })
@@ -200,22 +217,6 @@ angular.module('starter.controllers', [])
 
 .controller('HomeCtrl', function($scope) {
 
-    //Query the backend for the documents
-    $scope.getDocuments = function () {
-        //Set Loading to true
-        $scope.loading = true;
-
-        var payload = {
-            username: $scope.loginData.username,
-            password: $scope.loginData.password
-        };
-
-        User.login(payload, function(data, status){
-            
-        }, function(){
-            alert("FAILURE!");
-        });
-    }
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams) {
