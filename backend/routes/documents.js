@@ -45,7 +45,7 @@ router.post('/', function(req, res) {
 
 /* Get User Documents */
 router.get('/', function(req, res) {
-    SessionService.validateSession(req.body.sessionToken, function(err, userId) {
+    SessionService.validateSession(req.query.sessionToken, function(err, userId) {
         if (err) {
             res.json(err);
         } else {

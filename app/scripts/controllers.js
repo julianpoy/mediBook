@@ -23,8 +23,8 @@ angular.module('starter.controllers', [])
     $scope.modal = modal;
 
     //Look for the session Token
-    var sessionToken;
-    if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
+    $scope.sessionToken;
+    if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
         $scope.modal.show();
@@ -82,11 +82,13 @@ angular.module('starter.controllers', [])
       $scope.loading = true;
 
       var payload = {
-          username: $scope.loginData.username,
-          password: $scope.loginData.password
+          sessionToken: $scope.sessionToken
       };
 
       Documents.get(payload, function(data, status){
+
+          //Decrypt all of the files in the data
+          
 
       }, function(){
           alert("FAILURE!");
