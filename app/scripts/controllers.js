@@ -82,7 +82,9 @@ angular.module('starter.controllers', [])
 .controller('AuthCtrl', function($scope, $timeout, User) {
 
     $scope.showPageOne = true;
-
+    $scope.confirmed = false;
+    $scope.regData = {};
+    $scope.loginData = {};
     //Get the session Token
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
@@ -115,6 +117,8 @@ angular.module('starter.controllers', [])
 
     //Register the User
     $scope.registerUser = function () {
+
+        console.log("boo");
         //Set Loading to true
         $scope.loading = true;
 
