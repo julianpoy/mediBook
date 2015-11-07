@@ -30,7 +30,7 @@ angular.module('starter.controllers', [])
     if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
-        $scope.modal.show();
+        //$scope.modal.show();
     }
   });
 
@@ -127,10 +127,22 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $http) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Document, $timeout) {
+
+    $scope.newDoc = {};
 
     //Initialize the files array
-    $scope.addedFiles = {};
+    $scope.uploadImage;
+
+    $scope.docSelect = function(){
+        ionic.trigger('click', { target: document.getElementById('fileInput') });
+    }
+
+    $scope.getDoc = function(target){
+        var file = target.files[0];
+        $scope.uploadImage = file.name;
+        $scope.$apply();
+    };
 
     //Get a photo from the gallery
     //http://learn.ionicframework.com/formulas/cordova-camera/
@@ -142,8 +154,7 @@ angular.module('starter.controllers', [])
     };
 
     $cordovaImagePicker.getPictures().then(function(imageData) {
-        console.log("img URI= " + imageData);
-        //Here you will be getting image data
+        $scope.uploadImage = imageData[0];
     }, function(err) {
         alert("Failed because: " + err);
         console.log('Failed because: ' + err);
@@ -164,7 +175,7 @@ angular.module('starter.controllers', [])
         $cordovaCamera.getPicture(options).then(function(imageData) {
 
             //save the image URI
-            $scope.addedFiles.push(imageData);
+            $scope.uploadImage = imageData;
 
         }, function(err) {
             alert("Failed because: " + err);
@@ -176,25 +187,41 @@ angular.module('starter.controllers', [])
     $scope.submitDoc = function() {
 
         //First check if we added any files
-        if($scope.addedFiles[0])
+        if($scope.uploadImage)
         {
             //Our backend url and the file we would like to upload
-            var uploadUrl = "http://localhost:3000/documents/file";
-            var file = $scope.addedFiles[i];
+            var uploadUrl = "http://jnode.ngrok.kondeo.com:8080/documents/file";
+            var file = $scope.uploadImage;
 
-            //Create our form data object, and add the title and description
-            var fd = new FormData();
-            if(file) fd.append('file', file);
-            $http.post(uploadUrl, fd, {
-                transformRequest: angular.identity,
-                headers: {'Content-Type': undefined}
-            })
-            .success(function(){
-                //Show Success Toast and redirect back home
-            })
-            .error(function(){
-                //Display error toast
-            });
+            var options = {};
+
+            $cordovaFileTransfer.upload(uploadUrl, file, options, true).then(function(result) {
+                var imageName = JSON.parse(result.response);
+
+                var imageArray = [];
+                imageArray.push(imageName.filename);
+
+                var payload = {
+                    title: $scope.newDoc.title,
+                    body: $scope.newDoc.desc,
+                    images: imageArray
+                };
+
+                alert("dfd");
+
+                Document.create(payload, function(data, status){
+                    alert("dfd2");
+                }, function(err){
+                    alert(angular.toJson(err));
+                });
+
+              }, function(err) {
+                alert(err);
+              }, function (progress) {
+                $timeout(function () {
+                  $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                })
+              });
         }
     }
 })
