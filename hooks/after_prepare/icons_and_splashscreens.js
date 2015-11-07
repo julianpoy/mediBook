@@ -20,7 +20,7 @@ var Orchestrator = require('orchestrator');
 
 var BASES = {
   android: 'res',
-  ios: 'MediBook/Resources'
+  ios: 'Tempionic/Resources'
 };
 var RESOURCE_DIR = 'resources';
 
