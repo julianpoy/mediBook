@@ -23,13 +23,13 @@ return {
 
 return $resource( 'http://localhost:3000/' + 'users/:Id',
     { Id: '@Id' }, {
-        login: {
+        join: {
             method: 'POST',
             params: { Id: 'register' },
             isArray: false
         },
 
-        join: {
+        login: {
             method: 'POST',
             params: { Id: 'login' },
             isArray: false
