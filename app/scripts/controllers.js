@@ -78,6 +78,10 @@ angular.module('starter.controllers', [])
 
   //Query the backend for the documents
   $scope.getDocuments = function () {
+
+      //Create the documents object
+      $scope.documents = [];
+
       //Set Loading to true
       $scope.loading = true;
 
@@ -87,8 +91,67 @@ angular.module('starter.controllers', [])
 
       Documents.get(payload, function(data, status){
 
+          //Get the key from localstorage to decrypt
+          var encryptKey = window.localStorage.getItem("key");
+
+          var decryptedDocs = [];
+
           //Decrypt all of the files in the data
-          
+          for(var i; i < data.length; i++)
+          {
+              //Decrypt the title
+              var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
+
+              //Check if it decrypted correctly
+              if(!/^data:/.test(decryptedTitle)){
+					alert("Invalid decryption key! Please log in!");
+                    $scope.modal.show();
+					break;
+			    }
+
+                //Set the Title to our decrypted object
+                decryptedDocs[i].title = decryptedTitle;
+
+                //Decrypt the description
+                var decryptedDesc = CryptoJS.AES.decrypt(data[i].body, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                //Check if it decrypted correct
+                if(!/^data:/.test(decryptedDesc)){
+  					alert("Invalid decryption key! Please log in!");
+                      $scope.modal.show();
+  					break;
+  			    }
+
+                //Set it to decryption object
+                decryptedDocs[i].body = decryptedDesc;
+
+                //Decrypt all the files and images
+                for(var j = 0; j < data.images.length; j++)
+                {
+                    //Init the images array
+                    decryptedDocs[i].images = [];
+
+                    //Decrypt the images/files
+                    var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
+
+                    //check if decrypted correctly
+                    if(!/^data:/.test(decryptedDesc)){
+      					alert("Invalid decryption key! Please log in!");
+                          $scope.modal.show();
+      					break;
+      			    }
+
+                    //Save to decryption object
+                    decryptedDocs[i].images[j] = decryptedImg;
+
+                }
+          }
+
+          //Set the decyption object
+          $scope.documents = decryptedDocs;
+
+          //Stop the spinner
+          $scope.loading = false;
 
       }, function(){
           alert("FAILURE!");

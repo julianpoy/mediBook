@@ -13,6 +13,10 @@
       </ion-item>
     </ion-list>
 
+    <div class = "feedSpinnerContainer" ng-if = "documents.length < 1 && loading == false">
+        <h4 class = "center">No Documents Found. Please Create one by tapping the + above!</h4>
+    </div>
+
 
   </ion-content>
 </ion-view>
