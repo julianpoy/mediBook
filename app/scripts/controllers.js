@@ -336,12 +336,33 @@ angular.module('starter.controllers', [])
         });
     }
 
+    //Convert file url to Blob
+    // function dataURItoBlob(dataURI) {
+    //     // convert base64 to raw binary data held in a string
+    //     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    //     var byteString = atob(dataURI.split(',')[1]);
+    //
+    //     // separate out the mime component
+    //     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    //
+    //     // write the bytes of the string to an ArrayBuffer
+    //     var ab = new ArrayBuffer(byteString.length);
+    //     var ia = new Uint8Array(ab);
+    //     for (var i = 0; i < byteString.length; i++) {
+    //         ia[i] = byteString.charCodeAt(i);
+    //     }
+    //
+    //     // write the ArrayBuffer to a blob, and you're done
+    //     var bb = new BlobBuilder();
+    //     bb.append(ab);
+    //     return bb.getBlob(mimeString);
+    // }
+
     //Submit the document to the backend
     $scope.submitDoc = function() {
 
         //Our backend url and the file we would like to upload
         var uploadUrl = "http://mangorabo.ngrok.kondeo.com:8080/documents/file";
-        //var file = $scope.uploadImage;
 
         //Get our encrypt Key
         var encryptKey = window.localStorage.getItem("key");
@@ -362,17 +383,14 @@ angular.module('starter.controllers', [])
         for(var i = 0; i < $scope.addedFiles.length; i++)
         {
 
-            //Reader to read the files
-            var reader = new FileReader();
+            var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
+            console.log(encrypted.toString());
 
-            //Encrypt the contents of the image
-            reader.onload = function(e){
-				// Use the CryptoJS library and the AES cypher to encrypt the
-				// contents of the file, held in e.target.result, with the password
-				var encrypted = CryptoJS.AES.encrypt(e.target.result, password);
-            }
+            //console.log($scope.addedFiles[i]);
 
-            $cordovaFileTransfer.upload(uploadUrl, readAsDataURL($scope.addedFiles[i]), options, true).then(function(result) {
+
+            $cordovaFileTransfer.upload(uploadUrl, $scope.addedFiles[i], options, true)
+            .then(function(result) {
                 var imageName = JSON.parse(result.response);
 
                 imageArray.push(imageName.filename);
