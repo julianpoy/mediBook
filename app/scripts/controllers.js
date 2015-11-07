@@ -190,7 +190,7 @@ angular.module('starter.controllers', [])
         if($scope.uploadImage)
         {
             //Our backend url and the file we would like to upload
-            var uploadUrl = "http://jnode.ngrok.kondeo.com:8080/documents/file";
+            var uploadUrl = "http://mangorabo.ngrok.kondeo.com:8080/documents/file";
             var file = $scope.uploadImage;
 
             var options = {};
@@ -209,7 +209,7 @@ angular.module('starter.controllers', [])
 
                 alert("dfd");
 
-                Document.create(payload, function(data, status){
+                Document.create(payload, function(data, status) {
                     alert("dfd2");
                 }, function(err){
                     alert(angular.toJson(err));
