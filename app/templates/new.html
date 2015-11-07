@@ -1,0 +1,25 @@
+<ion-view view-title="New" ng-controller = "NewCtrl">
+  <ion-content>
+    <h1 class = "center">New Document</h1>
+
+    <form method="post" enctype="multipart/form-data">
+
+    <label class="item item-input">
+      <span class="input-label">Title</span>
+      <input type="text" ng-model="newDoc.title">
+    </label>
+
+    <button class="button button-outline button-positive newButton"
+    ng-click = "getPhoto()">Add Image From Gallery</button>
+
+    <button class="button button-outline button-positive newButton"
+    ng-click = "showNextPage()">Take Picture With Camera</button>
+
+    <label class="item item-input">
+      <span class="input-label">Description</span>
+      <textarea rows="8" cols="10"
+      ng-model="newDoc.desc">
+    </label>
+    </form>
+  </ion-content>
+</ion-view>

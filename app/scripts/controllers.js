@@ -25,7 +25,7 @@ angular.module('starter.controllers', [])
     if(window.localStorage.getItem("sessionToken"))  sessionToken = window.localStorage.getItem("sessionToken");
     else {
         //Open the login modal
-        $scope.modal.show();
+        //$scope.modal.show();
     }
   });
 
@@ -92,6 +92,45 @@ angular.module('starter.controllers', [])
     $scope.loginUser = function () {
         //Set Loading to true
         $scope.loading = true;
+    }
+})
+
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker) {
+
+    //Get a photo from the gallery
+    //http://learn.ionicframework.com/formulas/cordova-camera/
+    $scope.getPhoto = function() {
+
+    var options = {
+        quality: 75,
+
+    };
+
+    $cordovaImagePicker.getPictures().then(function(imageData) {
+        console.log("img URI= " + imageData);
+        //Here you will be getting image data
+    }, function(err) {
+        alert("Failed because: " + err);
+        console.log('Failed because: ' + err);
+    });
+
+    };
+
+    //http://ngcordova.com/docs/plugins/imagePicker/
+    $scope.takePhoto = function () {
+
+        //Options for the Photo
+        var options = {
+            quality: 75
+        };
+
+        $cordovaCamera.getPicture().then(function(imageData) {
+            console.log("img URI= " + imageData);
+            //Here you will be getting image data
+        }, function(err) {
+            alert("Failed because: " + err);
+            console.log('Failed because: ' + err);
+        });
     }
 })
 
