@@ -1,6 +1,27 @@
 /* Empty. Add your own CSS if you like */
+
+/* General Styles */
 .center {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+}
+
+/*Loading Spinner */
+.spinner {
+   position: absolute;
+   left: 47%;
+   top: 47%;
+   height:60px;
+   width:60px;
+   margin:0px auto;
+   -webkit-animation: rotation .75s infinite linear;
+   -moz-animation: rotation .75s infinite linear;
+   -o-animation: rotation .75s infinite linear;
+   animation: rotation .75s infinite linear;
+   border-left:6px solid #11c1f3;
+   border-right:6px solid #11c1f3;
+   border-bottom:6px solid #11c1f3;
+   border-top:6px solid #387ef5;
+   border-radius:100%;
 }
