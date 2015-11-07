@@ -13,6 +13,14 @@
     margin-right: auto !important;
 }
 
+.card {
+    margin-bottom: 0px !important;
+}
+
+.row {
+    flex-wrap: wrap !important;
+}
+
 /*Loading Spinner */
 .ionicSpinner svg{
     width: 75px;

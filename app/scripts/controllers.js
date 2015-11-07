@@ -281,7 +281,34 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('HomeCtrl', function($scope, $cordovaFileTransfer, Documents) {
+.controller('HomeCtrl', function($scope, $cordovaFileTransfer, User) {
+
+    //Get the sessionToken
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Get the user object
+    $scope.getUser = function() {
+
+        //Create the payload
+        var payload = {
+            sessionToken: $scope.sessionToken
+        };
+
+        //Send to the backend
+        User.get(payload, function (data, status) {
+
+            //Success
+            $scope.user = data;
+
+        }, function () {
+            //FAILURE
+            console.log("GAME OVER! Could not get user");
+        })
+
+    }
+
+    //Get the User
+    $scope.getUser();
 
 
 })

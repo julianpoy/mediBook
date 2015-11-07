@@ -14,6 +14,12 @@ return $resource( 'http://localhost:3000/' + 'users/:Id',
             method: 'POST',
             params: { Id: 'login' },
             isArray: false
+        },
+
+        get: {
+            method: 'GET',
+            params: { Id: '' },
+            isArray: false
         }
 
     } );

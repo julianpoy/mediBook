@@ -9,21 +9,24 @@
 
     <ion-list>
       <div class = "list card" href="#/app/document/{{doc._id}}">
-          <div class="item item-avatar" style="height: 100px;">
+
+          <!-- Title of App -->
+          <h2 class = "center">Medibook</h2>
+
+          <div ng-if "user.photo" class="item item-avatar" style="height: 100px;">
             <img class = "center" style="margin-left: calc(50% - 45px);
-    height: 70px;
-    width: 70px;
-    max-width: initial;
-    max-height: initial;" src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Samantha_Ruth_Prabhu.jpg">
+                height: 70px;
+                width: 70px;
+                max-width: initial;
+                max-height: initial;" src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Samantha_Ruth_Prabhu.jpg">
           </div>
 
-          <div class="item item-body">
-            <p style="text-align: center; margin-top: 0;">
-              Name<br />
-              DOB<br />
-              This app contains all pertinant medical information.
-            </p>
+          <div ng-if = "user.name || user.dob" class="item item-body">
+              <h4 class = "center" ng-if = "user.name">Name</h4><br />
+              <h4 class = "center" ng-if = "user.dob">DOB</h4><br />
           </div>
+
+          <h6 class = "center">This app contains pertinant medical information for this user.</h6>
 
 
     </div>
