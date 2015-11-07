@@ -31,6 +31,24 @@ angular.module('starter.controllers', [])
     }
   });
 
+  //Reinitialize modal
+  $scope.reInitModal = function() {
+
+      $scope.modal = null;
+
+      $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: $scope,
+        backdropClickToClose: false,
+        hardwareBackButtonClose: false
+      }).then(function(modal) {
+
+        //Create the modal
+        $scope.modal = modal;
+    });
+  }
+
+
+
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
@@ -105,6 +123,11 @@ angular.module('starter.controllers', [])
             window.localStorage.setItem("sessionToken", data.token);
             window.localStorage.setItem("key", $scope.regData.key);
             $scope.closeLogin();
+
+            //Re init the modal
+            $timeout(function () {
+                $scope.reInitModal();
+            }, 10);
         }, function(){
             alert("FAILURE!");
         });
@@ -125,6 +148,11 @@ angular.module('starter.controllers', [])
             window.localStorage.setItem("sessionToken", data.token);
             window.localStorage.setItem("key", $scope.loginData.key);
             $scope.closeLogin();
+
+            //Re init the modal
+            $timeout(function () {
+                $scope.reInitModal();
+            }, 10);
         }, function(){
             alert("FAILURE!");
         });
