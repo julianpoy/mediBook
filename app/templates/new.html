@@ -1,5 +1,5 @@
-<ion-view view-title="New" ng-controller = "NewCtrl">
-  <ion-content>
+<ion-view view-title="New">
+  <ion-content ng-controller = "NewCtrl">
     <h1 class = "center">New Document</h1>
 
     <form method="post" enctype="multipart/form-data">
@@ -43,6 +43,8 @@
       <textarea rows="8" cols="10"
       ng-model="newDoc.desc"></textarea>
     </label>
+
+    {{newDoc}}
 
     <button class="button button-outline button-positive newButton"
     ng-disabled = "!newDoc.title ||

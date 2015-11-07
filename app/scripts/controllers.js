@@ -127,7 +127,9 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Document, $timeout) {
+
+    $scope.newDoc = {};
 
     //Initialize the files array
     $scope.uploadImage;
@@ -194,7 +196,25 @@ angular.module('starter.controllers', [])
             var options = {};
 
             $cordovaFileTransfer.upload(uploadUrl, file, options, true).then(function(result) {
-                alert(result);
+                var imageName = JSON.parse(result.response);
+
+                var imageArray = [];
+                imageArray.push(imageName.filename);
+
+                var payload = {
+                    title: $scope.newDoc.title,
+                    body: $scope.newDoc.desc,
+                    images: imageArray
+                };
+
+                alert("dfd");
+
+                Document.create(payload, function(data, status){
+                    alert("dfd2");
+                }, function(err){
+                    alert(angular.toJson(err));
+                });
+
               }, function(err) {
                 alert(err);
               }, function (progress) {

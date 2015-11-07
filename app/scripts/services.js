@@ -39,11 +39,11 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
 
 }])
 
-factory('Document', ['$resource', function($resource) {
+.factory('Document', ['$resource', function($resource) {
 
 return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'documents/:Id',
     { Id: '@Id' }, {
-        join: {
+        create: {
             method: 'POST',
             params: { Id: '' },
             isArray: false
@@ -51,4 +51,4 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'documents/:Id',
 
     } );
 
-}]);;
+}]);
