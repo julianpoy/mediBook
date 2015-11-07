@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 //Database
 var mongo = require('mongodb');
 var db = require('./models/db');
+var user = require('./models/user');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
