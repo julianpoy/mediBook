@@ -11,14 +11,14 @@
 
     <!-- Div to hold image or filename -->
     <ion-item class = "uploadContainer">
-        <img ng-if = "cameraPhoto" ng-src = "cameraPhoto" />
+        <img class = "cameraPhoto" ng-if = "cameraPhoto" ng-src = "{{cameraPhoto}}" />
     </ion-item>
 
     <button class="button button-outline button-positive newButton"
     ng-click = "getPhoto()">Add Image From Gallery</button>
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "showNextPage()">Take Picture With Camera</button>
+    ng-click = "takePhoto()">Take Picture With Camera</button>
 
     <label class="item item-input">
       <span class="input-label">Description</span>

@@ -60,7 +60,18 @@
 }
 
 .uploadContainer {
-    
+}
+
+.cameraPhoto {
+    background-size: contain;
+
+    width: 250px;
+    height: auto;
+
+    border-radius: 3px;
+
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Fading Ng-hide */
