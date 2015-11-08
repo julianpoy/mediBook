@@ -24,7 +24,14 @@ angular.module('starter.controllers', [])
 
     //Look for the session Token
     $scope.sessionToken;
-    if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    if(window.localStorage.getItem("sessionToken"))
+    {
+        //Save the sessiontoken
+        $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+        //Get the documents
+        $scope.getDocuments();
+    }
     else {
         //Open the login modal
         $scope.modal.show();
@@ -46,8 +53,6 @@ angular.module('starter.controllers', [])
         $scope.modal = modal;
     });
   }
-
-  if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
     //Go to a new state
     $scope.navigatePage = function(stateName, params) {
@@ -155,8 +160,6 @@ angular.module('starter.controllers', [])
           });
       }
   }
-
-  $scope.getDocuments();
 
 // END APP CONTROLLER
 })
@@ -295,32 +298,34 @@ angular.module('starter.controllers', [])
 .controller('HomeCtrl', function($scope, $cordovaFileTransfer, User) {
 
     //Get the sessionToken
-    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    if(window.localStorage.getItem("sessionToken"))
+    {
+        $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
-    //Get the user object
-    $scope.getUser = function() {
+        //Get the user object
+        $scope.getUser = function() {
 
-        //Create the payload
-        var payload = {
-            sessionToken: $scope.sessionToken
-        };
+            //Create the payload
+            var payload = {
+                sessionToken: $scope.sessionToken
+            };
 
-        //Send to the backend
-        User.get(payload, function (data, status) {
+            //Send to the backend
+            User.get(payload, function (data, status) {
 
-            //Success
-            $scope.user = data;
+                //Success
+                $scope.user = data;
 
-        }, function () {
-            //FAILURE
-            console.log("GAME OVER! Could not get user");
-        })
+            }, function (err) {
+                //FAILURE
+                console.log("GAME OVER! Could not get user");
+            })
 
+        }
+
+        //Get the User
+        $scope.getUser();
     }
-
-    //Get the User
-    $scope.getUser();
-
 
 })
 
