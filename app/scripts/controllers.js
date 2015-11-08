@@ -36,6 +36,17 @@ angular.module('starter.controllers', [])
     }
   });
 
+  // An alert dialog
+   $scope.showAlert = function(title, body, callback) {
+     var alertPopup = $ionicPopup.alert({
+       title: title,
+       template: body
+     });
+     alertPopup.then(function(res) {
+       callback();
+     });
+   };
+
   //Reinitialize modal
   $scope.reInitModal = function() {
 
@@ -122,7 +133,7 @@ angular.module('starter.controllers', [])
 
                   //Check if it decrypted correctly
                   if(/^data:/.test(decryptedTitle)){
-                      alert("Invalid decryption key! Please log in!");
+                      $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                         $scope.modal.show();
                       break;
                   }
@@ -135,7 +146,7 @@ angular.module('starter.controllers', [])
 
                     //Check if it decrypted correct
                     if(/^data:/.test(decryptedDesc)){
-                          alert("Invalid decryption key! Please log in!");
+                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                           $scope.modal.show();
                           break;
                       }
@@ -155,7 +166,7 @@ angular.module('starter.controllers', [])
 
                         //check if decrypted correctly
                         if(/^data:/.test(decryptedImg)){
-                              alert("Invalid decryption key! Please log in!");
+                              $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                               $scope.modal.show();
                               break;
                           }
@@ -172,8 +183,8 @@ angular.module('starter.controllers', [])
               //Stop the spinner
               $scope.loading = false;
 
-          }, function(){
-              alert("FAILURE!");
+          }, function(err){
+              $scope.showAlert("Error processing!", "Error details: " + angular.toJson(err));
           });
       }
   }
@@ -244,7 +255,7 @@ angular.module('starter.controllers', [])
                 $scope.reInitModal();
             }, 10);
         }, function(err){
-            alert(angular.toJson(err));
+            $scope.showAlert("Error registering!", "Error details: " + angular.toJson(err));
         });
 
     }
@@ -270,8 +281,8 @@ angular.module('starter.controllers', [])
             $timeout(function () {
                 $scope.reInitModal();
             }, 10);
-        }, function(){
-            alert("FAILURE!");
+        }, function(err){
+
         });
     }
 })
@@ -314,8 +325,7 @@ angular.module('starter.controllers', [])
     $cordovaImagePicker.getPictures(options).then(function(imageData) {
         $scope.addedFiles.push(imageData[0]);
     }, function(err) {
-        alert("Failed because: " + err);
-        console.log('Failed because: ' + err);
+        $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
     });
 
     };
@@ -336,32 +346,9 @@ angular.module('starter.controllers', [])
             $scope.addedFiles.push(imageData);
 
         }, function(err) {
-            alert("Failed because: " + err);
-            console.log('Failed because: ' + err);
+            $scope.showAlert("Error opening camera!", "Error details: " + angular.toJson(err));
         });
     }
-
-    //Convert file url to Blob
-    // function dataURItoBlob(dataURI) {
-    //     // convert base64 to raw binary data held in a string
-    //     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    //     var byteString = atob(dataURI.split(',')[1]);
-    //
-    //     // separate out the mime component
-    //     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    //
-    //     // write the bytes of the string to an ArrayBuffer
-    //     var ab = new ArrayBuffer(byteString.length);
-    //     var ia = new Uint8Array(ab);
-    //     for (var i = 0; i < byteString.length; i++) {
-    //         ia[i] = byteString.charCodeAt(i);
-    //     }
-    //
-    //     // write the ArrayBuffer to a blob, and you're done
-    //     var bb = new BlobBuilder();
-    //     bb.append(ab);
-    //     return bb.getBlob(mimeString);
-    // }
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
@@ -398,11 +385,10 @@ angular.module('starter.controllers', [])
         };
 
         Documents.create(payload, function(data, status) {
-          alert("dfd2");
 
           //Go Back Home
         }, function(err){
-          alert(angular.toJson(err));
+          $scope.showAlert("Error creating document!", "Error details: " + angular.toJson(err));
         });
     }
 })
@@ -427,8 +413,7 @@ angular.module('starter.controllers', [])
             $scope.user = data;
 
         }, function () {
-            //FAILURE
-            console.log("GAME OVER! Could not get user");
+            $scope.showAlert("Your session is invalid", "Please use the sidebar to login again");
         })
 
     }
