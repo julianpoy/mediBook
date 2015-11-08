@@ -36,8 +36,8 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
 
 return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
     { id: '@id' }, {
-        get: {
-            method: 'GET',
+        go: {
+            method: 'POST',
             params: { id: '@id' },
             isArray: false
         },

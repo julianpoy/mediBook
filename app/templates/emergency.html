@@ -11,8 +11,8 @@
       <h2 class = "center">Welcome to the emergency page. Please enter a username/email, and their encryption key to access their medical info. These are private documents, and should <b>only be used in emergencies</b></h2>
 
             <label class="item item-input">
-              <span class="input-label">UserId</span>
-              <input type="email" name = "emerEmail" ng-model="emergency.userId">
+              <span class="input-label">Username/Email</span>
+              <input type="email" name = "emergEmail" ng-model="emergency.userId">
             </label>
             <label class="item item-input">
               <span class="input-label">Encryption Key</span>
@@ -23,42 +23,12 @@
                 <button class="button button-outline button-positive"
                 ng-click = "emergencyLogin()"
                 ng-disabled = "loading ||
-                !emergencyForm.emerEmail.$valid ||
+                !emergencyForm.emergEmail.$valid ||
                 !emergency.key ||
                 emergency.key.length < 8">Submit</button>
             </label>
         </div>
       </div>
   </form>
-
-   <!-- Loading Spinner -->
-    <div class = "feedSpinnerContainer" ng-show = "loading">
-        <ion-spinner class = "spinner-positive ionicSpinner"></ion-spinner>
-        <h4 class = "center spinnerText">Downloading and decrypting the documents. This may take a short while...</h4>
-    </div>
-
-    <!--List of documents -->
-    <div class="row">
-        <div class="col-50" ng-repeat="doc in emergencyDocuments | filter:searchText track by $index " >
-            <div class = "list card">
-                <div class="item item-divider">
-                  <img src="images/icon_document.png">
-                  <h2>{{doc.title}}</h2>
-                  <p>{{priorityArray[doc.priority - 1]}}</p>
-                </div>
-                <div class="item item-body">
-                  <h2>{{doc.desc}}</h2>
-                </div>
-
-                <ion-scroll class="item item-divider"
-                zooming="true" direction="xy"
-                ng-show = "document.images.length > 0">
-                    <p>*Image can be scrolled and zoomed</p>
-                    <img class="full-image" ng-click = ""
-                    id = "img-{{doc._id}}">
-                </ion-scroll>
-          </div>
-        </div>
-    </div>
   </ion-content>
 </ion-view>
