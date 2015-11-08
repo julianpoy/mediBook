@@ -95,6 +95,7 @@ textarea:focus::-webkit-input-placeholder {
 
 .newSubmitButton {
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .cameraItem {

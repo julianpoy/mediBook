@@ -627,5 +627,5 @@ angular.module('starter.controllers', [])
             $scope.document = $scope.documents[i];
         }
     }
-    document.getElementById("documentImage").src = $scope.document.images[0];
+    if($scope.document.images.length > 0)document.getElementById("documentImage").src = $scope.document.images[0];
 });
