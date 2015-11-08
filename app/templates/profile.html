@@ -1,0 +1,30 @@
+<ion-view view-title="My Profile">
+  <ion-content>
+      
+      <label class="item item-input">
+        <span class="input-label">E-mail</span>
+        <input type="email" ng-model="userInput.email">
+      </label>
+
+      <label class="item item-input">
+        <span class="input-label">Full Name</span>
+        <input type="email" ng-model="userInput.name">
+      </label>
+
+      <label class="item item-input">
+        <span class="input-label">Date</span>
+        <input type="email" ng-model="userInput.dob">
+      </label>
+
+      <label ng-show = "!confirmed" class="item">
+          <button class="button button-outline button-positive"
+          ng-click = "showRegConfirm()"
+          ng-disabled = "loading ||
+          regData.key != regData.keyConfirm ||
+          !regData.key ||
+          !regData.keyConfirm ||
+          regData.key.length < 8 ||
+          regData.keyConfirm.length < 8">Submit</button>
+      </label>
+  </ion-content>
+</ion-view>
