@@ -870,6 +870,23 @@ angular.module('starter.controllers', [])
             //Set the decyption object
             $scope.emergencyDocuments = decryptedDocs;
 
+            //Loop through and assign the images
+            for(var i = 0; i < $scope.emergencyDocuments.length; i ++)
+            {
+                if(document.getElementById("id-" + $scope.emergencyDocuments[i]._id))
+                {
+
+                    if(document.getElementById("id-" + $scope.emergencyDocuments[i]._id).images
+                    && document.getElementById("id-" + $scope.emergencyDocuments[i]._id).images.length > 0)
+                    {
+                        ocument.getElementById("id-" + $scope.emergencyDocuments[i]._id).src = "data:image/png;base64," + $scope.document.images[0];
+                    }
+
+                }
+            }
+
+            //
+
             //Stop the spinner
             $scope.loading = false;
 

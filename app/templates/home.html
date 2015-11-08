@@ -1,5 +1,5 @@
 <ion-view view-title="Home">
-  <ion-content class = "homeContainer">
+  <ion-content class = "appContent">
 
       <!-- Loading Spinner -->
       <div class = "feedSpinnerContainer" ng-show = "loading">
@@ -36,26 +36,15 @@
     </ion-list>
 
     <div class="row">
-      <div class="col-50" ng-repeat="doc in emergencyDocuments | filter:searchText track by $index " >
-          <div class = "list card">
-              <div class="item item-divider">
-                <img src="images/icon_document.png">
-                <h2>{{doc.title}}</h2>
-                <p>{{priorityArray[doc.priority - 1]}}</p>
-              </div>
-              <div class="item item-body">
-                <h2>{{doc.desc}}</h2>
-              </div>
-
-              <ion-scroll class="item item-divider"
-              zooming="true" direction="xy"
-              ng-show = "document.images.length > 0">
-                  <p>*Image can be scrolled and zoomed</p>
-                  <img class="full-image" ng-click = ""
-                  id = "documentImage">
-              </ion-scroll>
+        <div class="col-50" ng-repeat="doc in documents | filter:searchText track by $index " >
+            <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
+                <div class="item item-avatar noCircle">
+                  <img src="images/icon_document.png">
+                  <h2>{{doc.title}}</h2>
+                  <p>{{priorityArray[doc.priority - 1]}}</p>
+                </div>
+          </div>
         </div>
-      </div>
     </div>
 
     <div class = "feedSpinnerContainer" ng-if = "documents.length < 1 && loading == false">
