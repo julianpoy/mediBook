@@ -116,6 +116,8 @@ angular.module('starter.controllers', [])
               //Decrypt all of the files in the data
               for(var i=0; i < data.length; i++)
               {
+                  decryptedDocs[i] = {};
+
                   //Decrypt the title
                   var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
 
