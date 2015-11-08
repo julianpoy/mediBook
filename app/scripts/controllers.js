@@ -82,7 +82,6 @@ angular.module('starter.controllers', [])
 
     //Go to a new state
     $scope.navigatePage = function(stateName, params) {
-        console.log(params);
         $state.go(stateName, params);
     }
 
@@ -227,13 +226,12 @@ angular.module('starter.controllers', [])
     $scope.confirmed = false;
     $scope.regData = {};
     $scope.loginData = {};
+
     //Get the session Token
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
     //Show The Next Page
     $scope.showNextPage = function() {
-
-        console.log($scope.showPageOne);
 
        //Timeout to apply the variable change
        $timeout(function () {
@@ -257,15 +255,35 @@ angular.module('starter.controllers', [])
         }, 0);
     }
 
+    //Go back a page
+    $scope.regBack = function () {
+
+        //Flips the pages back!
+
+        //Timeout to apply the variable change
+        $timeout(function () {
+            //Set show page one false
+            $scope.showPageTwo = false;
+        }, 0);
+
+         //Timeout to show next thing
+         $timeout(function () {
+             //Show the next page
+             $scope.showPageOne = true;
+         }, 1000);
+    }
+
     //Register the User
     $scope.registerUser = function () {
 
-        console.log("boo");
         //Set Loading to true
         $scope.loading = true;
 
+        //Encrypt the username
+        var encryptEmail = CryptoJS.AES.encrypt($scope.regData.username, $scope.regData.key);
+
         var payload = {
-            username: $scope.regData.username,
+            username: encryptEmail.toString(),
             password: $scope.regData.password
         };
 
@@ -292,8 +310,11 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
 
+        //Encrypt the username
+        var encryptEmail = CryptoJS.AES.encrypt($scope.loginData.username, $scope.loginData.key);
+
         var payload = {
-            username: $scope.loginData.username,
+            username: encryptEmail.toString(),
             password: $scope.loginData.password
         };
 
