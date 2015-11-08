@@ -2,7 +2,7 @@ angular.module('starter.services', ['ngResource'])
 
 .factory('User', ['$resource', function($resource) {
 
-return $resource( 'http://localhost:3000/' + 'users/:Id',
+return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
     { Id: '@Id' }, {
         join: {
             method: 'POST',
@@ -22,7 +22,7 @@ return $resource( 'http://localhost:3000/' + 'users/:Id',
 
 .factory('Documents', ['$resource', function($resource) {
 
-    return $resource('http://localhost:3000/' + 'documents',
+    return $resource('http://jnode.ngrok.kondeo.com:8080/' + 'documents',
         {}, {
             create: {
                 method: 'POST',

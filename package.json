@@ -71,7 +71,8 @@
       "id": "com.megster.cordova.FileChooser"
     },
     "cordova-plugin-file-transfer",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "android"

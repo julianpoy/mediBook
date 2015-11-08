@@ -176,7 +176,8 @@ angular.module('starter.controllers', [])
       }
   }
 
-  $scope.getDocuments();
+  //Get the users Documents
+  //$scope.getDocuments();
 
 // END APP CONTROLLER
 })
@@ -273,7 +274,8 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http, Documents, $timeout) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http,
+    Documents, $timeout, $cordovaFile, $window) {
 
     //Initialize the new document
     $scope.newDoc = {};
@@ -363,7 +365,7 @@ angular.module('starter.controllers', [])
     $scope.submitDoc = function() {
 
         //Our backend url and the file we would like to upload
-        var uploadUrl = "http://jnode.ngrok.kondeo.com:8080/documents/file";
+        var uploadUrl = "http://localhost:3000/documents/file";
 
         //Get our encrypt Key
         var encryptKey = window.localStorage.getItem("key");
@@ -384,15 +386,18 @@ angular.module('starter.controllers', [])
         for(var i = 0; i < $scope.addedFiles.length; i++)
         {
 
-            var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
-            console.log(encrypted.toString());
+            $cordovaFile.onload = function(e){
+				// Use the CryptoJS library and the AES cypher to encrypt the
+				// contents of the file, held in e.target.result, with the password
 
-            var file = new File([encrypted], "filename");
+				var encrypted = CryptoJS.AES.encrypt(e.target.result, password);
+            }
 
             //console.log($scope.addedFiles[i]);
-
-
-            $cordovaFileTransfer.upload(uploadUrl, file, options, true)
+            console.log($scope.addedFiles);
+            $cordovaFileTransfer.upload(uploadUrl,
+                $cordovaFile.readAsDataURL(cordova.file.applicationDirectory, $scope.addedFiles[i]),
+                options, true)
             .then(function(result) {
                 var imageName = JSON.parse(result.response);
 
