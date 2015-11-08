@@ -22,6 +22,12 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
             isArray: false
         },
 
+        emergency: {
+            method: 'GET',
+            params: { Id: '@Id' },
+            isArray: false
+        },
+
         update: {
             method: 'PUT',
             params: { Id: '' },
@@ -51,7 +57,13 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
                method: 'GET',
                params: { Id: '@Id' },
                isArray: false
-            }
+           },
+
+           singleDelete: {
+               method: 'DELETE',
+               params: { Id: '@Id' },
+               isArray: false
+           }
 
         });
 }])
@@ -62,6 +74,11 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/documents/:id',
     { id: '@id' }, {
         get: {
             method: 'GET',
+            params: { id: '@id' },
+            isArray: false
+        },
+        delete: {
+            method: 'DELETE',
             params: { id: '@id' },
             isArray: false
         }

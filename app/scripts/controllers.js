@@ -1,10 +1,16 @@
 angular.module('starter.controllers', [])
 
 //Need this to display files and things
-.config(function($compileProvider){
+.config(function($compileProvider, $ionicConfigProvider){
+
+  //White list for image sanitization
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+
+  //Center the app title for android
+  $ionicConfigProvider.navBar.alignTitle('center');
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup, $ionicHistory) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents,
+    $state, $ionicPopup, $ionicHistory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -17,7 +23,7 @@ angular.module('starter.controllers', [])
   $scope.loginData = {};
 
   //Priority value array
-  $scope.priorityArray = ["Low", "Medium", "High"]
+  $scope.priorityArray = ["Low", "Medium", "High"];
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -39,7 +45,7 @@ angular.module('starter.controllers', [])
         //Get the documents
         $scope.getDocuments();
     }
-    else {
+    else if(!$scope.isCurrentState('app.emergency')) {
         //Open the login modal
         $scope.modal.show();
     }
@@ -354,6 +360,9 @@ angular.module('starter.controllers', [])
     //Initialize the images array
     $scope.addedFiles = [];
 
+    //Set the default priority
+    $scope.newDoc.priority = 2;
+
     //Grab the sessionToken
     $scope.sessionToken = sessionToken = window.localStorage.getItem("sessionToken");
 
@@ -428,7 +437,7 @@ angular.module('starter.controllers', [])
     //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function(event) {
 
-        if(mobileDevice)
+        if($scope.mobileDevice)
         {
             var options = {
                 quality: 75,
@@ -447,7 +456,7 @@ angular.module('starter.controllers', [])
                     document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
-                  $scope.addedFiles.push(base64);
+                  $scope.addedFiles[0] = base64;
 
 
                 });
@@ -479,7 +488,7 @@ angular.module('starter.controllers', [])
                     document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
-                  $scope.addedFiles.push(base64);
+                  $scope.addedFiles[0] = base64;
 
 
                 });
@@ -493,8 +502,6 @@ angular.module('starter.controllers', [])
 
         }
     }
-
-    $scope.newDoc.priority = 2;
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
@@ -533,12 +540,15 @@ angular.module('starter.controllers', [])
         Documents.create(payload, function(data, status) {
 
             //Add document to $scope.documents
-            $scope.documents.push({
+            var pushObject = {
+                _id: (Math.random() * (10000000000000 - 1000) + 1000),
                 title: $scope.newDoc.title,
                 body: $scope.newDoc.desc,
                 priority: $scope.newDoc.priority,
                 images: $scope.addedFiles
-            });
+            }
+
+            $scope.documents.unshift(pushObject);
 
             //Success, go home, and clear the back buttons!
             $ionicHistory.nextViewOptions({
@@ -681,7 +691,18 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams, Documents) {
+.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory,
+    $cordovaFileOpener2, $ionicPopup, $state, DocumentById) {
+
+    //Get the sessionToken
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Disable back when returning to home
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+
+
     $scope.document = {};
     for(var i=0; i < $scope.documents.length; i++){
         if($scope.documents[i]._id == $stateParams.documentId){
@@ -693,4 +714,96 @@ angular.module('starter.controllers', [])
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
     }
+
+    //Delete the document
+    $scope.deleteDocument = function() {
+
+        //Confirm with alrert
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Are You Sure?',
+          template: 'All documents are completely secure, and can only be accessed by you. Once you delete this it cannot be undone.'
+        });
+        confirmPopup.then(function(res) {
+          if(res) {
+            //confirmed
+
+            //Show the loading
+            $scope.loading = true;
+
+            //Create the payload
+            var payload = {
+                sessionToken: $scope.sessionToken,
+                id: $stateParams.documentId
+            }
+
+            //Send to the backend to be deleteDocument
+            DocumentById.delete(payload, function () {
+
+                //Success!
+                //remove from the scope.documents
+                for(var i=0; i < $scope.documents.length; i++){
+                    if($scope.documents[i]._id == $stateParams.documentId){
+                        $scope.documents.splice(i,1);
+                    }
+                }
+
+                //Now navigate back to home
+                $state.go('app.home');
+
+            }, function (err) {
+                $scope.loading = false;
+                if (err.status == 401) {
+                    //Session is invalid!
+                    $scope.modal.show();
+                  } else {
+                    $scope.showAlert("Error", err.data.msg);
+                  }
+            })
+
+          } else {
+            //Declined
+          }
+        });
+    }
+
+    //Open the image in gallery, not bring used, couldnt implmeent in time
+    $scope.openImage = function () {
+
+        //Open the image in document
+        $cordovaFileOpener2.open(
+            "data:image/png;base64," + $scope.document.images[0],
+            "image/*"
+          ).then(function() {
+              // file opened successfully
+              conosole.log("hi!");
+
+          }, function(err) {
+              console.log(err);
+              // An error occurred. Show a message to the user
+              $scope.showAlert("Error, could not open this image file...");
+          });
+
+    }
+})
+
+
+.controller('EmergencyCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+
+    //Disable back when returning to home
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+
+    //submit user info
+    $scope.emergencyLogin = function() {
+
+        //Create the payload
+        var payload = {
+            userId: emergency.userId
+        }
+
+        
+
+    }
+
 });
