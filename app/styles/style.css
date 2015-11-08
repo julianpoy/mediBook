@@ -150,6 +150,10 @@ textarea:focus::-webkit-input-placeholder {
     bottom: 22px !important;
 }
 
+.docTitle {
+    margin-top: 0px !important;
+}
+
 /* Fading Ng-hide */
 
 
