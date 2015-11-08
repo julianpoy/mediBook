@@ -10,7 +10,7 @@
       </ion-nav-buttons>
 
       <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-plus-round" ng-click="navigatePage('app.newdoc')">
+        <button class="button button-icon button-clear ion-plus-round" ng-hide = "isCurrentState('app.newdoc')" ng-click="navigatePage('app.newdoc')">
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -33,10 +33,6 @@
 
       <ion-item menu-close href="#/app/new">
         <img src="images/icon_add.png" class="menuIcon">New Document
-      </ion-item>
-
-      <ion-item menu-close href="#/app/search">
-        <img src="images/icon_search.png" class="menuIcon">Search
       </ion-item>
 
       <ion-item menu-close ng-click="login()">

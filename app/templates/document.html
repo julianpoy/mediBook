@@ -2,18 +2,27 @@
   <ion-content>
     <div class="list card">
 
-    <div class="item item-avatar noCircle">
-         <img src="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/document.png">
-         <h2>{{document.title}}</h2>
-    </div>
+        <div class="item item-divider">
+            <h1 class = "center docTitle">{{document.title}}</h1>
+            <h6>{{document.priority}}</h6>
+        </div>
 
     <div class="item item-body">
-    <ion-scroll class="col-50" zooming="true" style="width: 100%; height: 100%">
-        <img class="full-image" src="{{document.images[0]}}">
-    </ion-scroll>
-    <p>
-      {{document.body}}
-    </p>
+
+        <ion-scroll class="col-50" zooming="true"
+        style="width: 100%; height: 100%"
+        ng-if = "document.images.length > 0">
+            <img class="full-image" id = "documentImage">
+        </ion-scroll>
+
+        <div class="item item-avatar noCircle center" ng-if = "document.images.length == 0">
+             <img src="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/document.png">
+        </div>
+
+        <p>
+          {{document.body}}
+        </p>
+
     </div>
 
   </div>

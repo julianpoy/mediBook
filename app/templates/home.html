@@ -11,7 +11,12 @@
       <div class = "list card">
 
           <!-- Title of App -->
-          <h2 class = "center">Medibook</h2>
+          <h1 class = "center">Medibook</h1>
+
+
+              <label class="item item-input">
+                <input type="text" class = "searchText" ng-model="searchText" placeholder="Search by document title, priority, or description...">
+              </label>
 
           <div ng-if "user.photo" class="item item-avatar" style="height: 100px;">
             <img class = "center" style="margin-left: calc(50% - 45px);
@@ -22,19 +27,20 @@
           </div>
 
           <div ng-if = "user.name || user.dob" class="item item-body">
-              <h4 class = "center" ng-if = "user.name">Name</h4><br />
-              <h4 class = "center" ng-if = "user.dob">DOB</h4><br />
+              <h2 class = "center homeUser" ng-if = "user.name">User: {{user.name}}</h2>
+              <h3 class = "center" ng-if = "user.dob">Date Of Birth: {{user.dob}}</h3>
           </div>
 
-          <h6 class = "center">This app contains pertinant medical information for this user.</h6>
+          <h5 class = "center">This app contains pertinant medical information for this user.</h5>
     </div>
     </ion-list>
 
     <div class="row">
-      <div class="col-50" ng-repeat="doc in documents" >
+      <div class="col-50" ng-repeat="doc in documents | filter: {title: searchText , desc: searchText, priority: searchText} track by $index " >
           <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
               <div class="item item-avatar noCircle">
-                <img src="images/icon_document.png">
+                <img ng-if = "doc.images.length < 0" src="images/icon_document.png">
+                <img ng-if = "doc.images.length > 0" src="{{doc.images[0]}}">
                 <h2>{{doc.title}}</h2>
                 <p>{{doc.priority}}</p>
               </div>

@@ -10,6 +10,9 @@ var Document = new mongoose.Schema({
     body: {
         type: String
     },
+    priority: {
+        type: String
+    },
     images: [{
         type: String
     }]

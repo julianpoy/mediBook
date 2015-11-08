@@ -1,13 +1,7 @@
 <ion-view view-title="New">
   <ion-content ng-controller = "NewCtrl">
-    <h1 class = "center">New Document</h1>
 
     <form method="post" enctype="multipart/form-data">
-
-    <label class="item item-input">
-      <span class="input-label">Title</span>
-      <input type="text" ng-model="newDoc.title">
-    </label>
 
     <!-- Div to hold image or filename -->
     <ion-item class = "uploadContainer">
@@ -23,20 +17,39 @@
     ng-click = "docSelect()">Add File From Documents</button>
 
     <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/> -->
+    <div class = "row cameraContainer">
+        <button class="button button-outline button-positive newButton"
+        ng-click = "getPhoto()">Open Gallery</button>
 
-    <button class="button button-outline button-positive newButton"
-    ng-click = "getPhoto($event)">Add Image From Gallery</button>
-
-    <button class="button button-outline button-positive newButton"
-    ng-click = "takePhoto($event)">Take Picture With Camera</button>
+        <button class="button button-outline button-positive newButton"
+        ng-click = "takePhoto()">Capture Picture</button>
+    </div>
 
     <label class="item item-input">
-      <span class="input-label">Description</span>
-      <textarea rows="8" cols="10"
-      ng-model="newDoc.desc"></textarea>
+      <span class="input-label newTitle">Title</span>
+      <input type="text" ng-model="newDoc.title"
+      class = "newTitle"
+      placeholder="Document Title">
     </label>
 
-    <button class="button button-outline button-positive newButton"
+    <label class="item item-input">
+      <span class="input-label descText">Description</span>
+      <textarea rows="4" cols="3"
+      ng-model="newDoc.desc" placeholder="Enter Description Here"></textarea>
+    </label>
+
+    <label class="item item-input item-select">
+        <div class="input-label">
+          Priority
+        </div>
+        <select ng-model = "newDoc.priority">
+          <option value = "High">High</option>
+          <option value = "Medium" ng-selected="true">Medium</option>
+          <option value = "Low">Low</option>
+        </select>
+    </label>
+
+    <button class="button button-outline button-positive newSubmitButton"
     ng-disabled = "!newDoc.title ||
     !newDoc.desc"
     ng-click = "submitDoc()">Submit</button>

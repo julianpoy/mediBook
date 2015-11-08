@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
 .config(function($compileProvider){
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup, $ionicHistory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -85,9 +85,10 @@ angular.module('starter.controllers', [])
         $state.go(stateName, params);
     }
 
-  //Go to a new state
-  $scope.navigatePage = function(stateName) {
-      $state.go(stateName);
+  //Return the app state
+  $scope.isCurrentState = function (stateName) {
+      if(stateName == $ionicHistory.currentStateName()) return true;
+      else false;
   }
 
   // Triggered in the login modal to close it
@@ -173,6 +174,22 @@ angular.module('starter.controllers', [])
 
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
+
+                    //Decrypt the priority
+                    var decryptedPriority = CryptoJS.AES.decrypt(data[i].priority, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                    //Check if it decrypted correct
+                    if(/^data:/.test(decryptedDesc)){
+                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
+                          $scope.modal.show();
+                          break;
+                      }
+
+                    //Set it to decryption object
+                    decryptedDocs[i].priority = decryptedPriority;
+
+                    //Get the object if
+                    decryptedDocs[i]._id = data[i]._id;
 
                     //Init the images array
                     decryptedDocs[i].images = [];
@@ -282,11 +299,8 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
 
-        //Encrypt the username
-        var encryptEmail = CryptoJS.AES.encrypt($scope.regData.username, $scope.regData.key);
-
         var payload = {
-            username: encryptEmail.toString(),
+            username: $scope.regData.username,
             password: $scope.regData.password
         };
 
@@ -313,11 +327,8 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
 
-        //Encrypt the username
-        var encryptEmail = CryptoJS.AES.encrypt($scope.loginData.username, $scope.loginData.key);
-
         var payload = {
-            username: encryptEmail.toString(),
+            username: $scope.loginData.username,
             password: $scope.loginData.password
         };
 
@@ -498,8 +509,10 @@ angular.module('starter.controllers', [])
         var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey);
 
         //Then Encrypt the description
-        //First Encrypt the title
         var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
+
+        //Then Encrypt the priority
+        var encryptPriority = CryptoJS.AES.encrypt($scope.newDoc.priority, encryptKey);
 
         //Our array of images
         var imageArray = [];
@@ -519,12 +532,27 @@ angular.module('starter.controllers', [])
           sessionToken: $scope.sessionToken,
           title: encryptTitle.toString(),
           body: encryptDesc.toString(),
+          priority: encryptPriority.toString(),
           images: imageArray
         };
 
         Documents.create(payload, function(data, status) {
 
-          //Go Back Home
+            //Add document to $scope.documents
+            $scope.documents.push({
+                title: encryptTitle.toString(),
+                body: encryptDesc.toString(),
+                priority: encryptPriority.toString(),
+                images: imageArray
+            });
+
+            //Success, go home, and clear the back buttons!
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
+            $state.go('app.home');
+
         }, function(err){
             $scope.loading = false;
             if (err.status == 401) {
@@ -542,7 +570,11 @@ angular.module('starter.controllers', [])
     //Get the sessionToken
     if(window.localStorage.getItem("sessionToken"))
     {
+        //Get the sessionToken and key
         $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+        //Get our encrypt Key
+        var encryptKey = window.localStorage.getItem("key");
 
         //Get the user object
         $scope.getUser = function() {
@@ -555,8 +587,11 @@ angular.module('starter.controllers', [])
             //Send to the backend
             User.get(payload, function (data, status) {
 
-                //Success
-                $scope.user = data;
+                //Success, Decrypt the data
+                $scope.user = {};
+
+                $scope.user.name = CryptoJS.AES.decrypt(data.name, encryptKey).toString(CryptoJS.enc.Latin1);
+                $scope.user.dob = CryptoJS.AES.decrypt(data.dob, encryptKey).toString(CryptoJS.enc.Latin1);
 
             }, function (err) {
                 $scope.loading = false;
@@ -600,7 +635,7 @@ angular.module('starter.controllers', [])
             $scope.userInput = {};
 
             //Set up all the ng-model
-            $scope.userInput.email = CryptoJS.AES.decrypt($scope.user.username, encryptKey).toString(CryptoJS.enc.Latin1);
+            $scope.userInput.email = $scope.user.username
             $scope.userInput.name = CryptoJS.AES.decrypt($scope.user.name, encryptKey).toString(CryptoJS.enc.Latin1);;
             $scope.userInput.dob = CryptoJS.AES.decrypt($scope.user.dob, encryptKey).toString(CryptoJS.enc.Latin1);;
 
@@ -625,14 +660,13 @@ angular.module('starter.controllers', [])
     $scope.updateUser = function () {
 
         //Encrypt the stuff!
-        var encryptEmail = CryptoJS.AES.encrypt($scope.userInput.email, encryptKey);
         var encryptName = CryptoJS.AES.encrypt($scope.userInput.name, encryptKey);
         var encryptDob = CryptoJS.AES.encrypt($scope.userInput.dob, encryptKey);
 
         //Create the payload
         var payload = {
             sessionToken: $scope.sessionToken,
-            username: encryptEmail.toString(),
+            username: $scope.userInput.email,
             name: encryptName.toString(),
             dob: encryptDob.toString()
         }
@@ -661,5 +695,8 @@ angular.module('starter.controllers', [])
             $scope.document = $scope.documents[i];
         }
     }
-    document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
+    if($scope.document.images.length > 0)
+    {
+        document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
+    }
 });
