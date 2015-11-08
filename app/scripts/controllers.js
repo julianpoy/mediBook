@@ -517,7 +517,7 @@ angular.module('starter.controllers', [])
             $scope.userInput = {};
 
             //Set up all the ng-model
-            $scope.userInput.email = CryptoJS.AES.decrypt($scope.user.username, encryptKey).toString(CryptoJS.enc.Latin1);
+            $scope.userInput.email = $scope.user.username
             $scope.userInput.name = CryptoJS.AES.decrypt($scope.user.name, encryptKey).toString(CryptoJS.enc.Latin1);;
             $scope.userInput.dob = CryptoJS.AES.decrypt($scope.user.dob, encryptKey).toString(CryptoJS.enc.Latin1);;
 
