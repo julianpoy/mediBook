@@ -88,7 +88,6 @@ router.post('/emergency', function(req, res, next) {
           msg: "Wrong email!"
         });
       } else {
-        var hash = crypto.pbkdf2Sync(req.body.password, user.salt, 10000, 512);
         if (true) {
           var token = crypto.randomBytes(48).toString('hex');
           new Session({

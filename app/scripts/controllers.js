@@ -22,6 +22,9 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = {};
 
+  //Emergency variable
+  $scope.emergency = false;
+
   //Priority value array
   $scope.priorityArray = ["Low", "Medium", "High"];
 
@@ -131,7 +134,7 @@ angular.module('starter.controllers', [])
   $scope.getDocuments = function () {
 
       //Check if we have the documents already
-      if($scope.sessionToken)
+      if($scope.sessionToken && !$scope.isCurrentState('app.emergency'))
       {
 
           //Set Loading to true
@@ -787,22 +790,46 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('EmergencyCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+.controller('EmergencyCtrl', function($scope, $ionicHistory, Emergency, $state) {
 
-    //Disable back when returning to home
-    $ionicHistory.nextViewOptions({
-        disableBack: true
-    });
+    //INit object for view scope
+    $scope.emergency = {};
 
     //submit user info
     $scope.emergencyLogin = function() {
 
+        //Set Loading to true
+        $scope.loading = true;
+
         //Create the payload
         var payload = {
-            userId: emergency.userId
+            username: $scope.emergency.userId
         }
 
-        
+        console.log(payload);
+
+        //Send it
+        Emergency.go(payload , function (data, status) {
+
+            //Get to the home state without history and pass the emergancy param
+            window.localStorage.setItem("sessionToken", data.token);
+            window.localStorage.setItem("key", $scope.emergency.key);
+
+            //Disable back when returning to home
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
+            //get documents, and get going
+            $scope.getDocuments();
+
+            $scope.emergency = true;
+
+            window.location = "/";
+
+        }, function (err) {
+
+        })
 
     }
 

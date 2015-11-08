@@ -1,10 +1,6 @@
 /* Empty. Add your own CSS if you like */
 
 /* Colors & nav */
-body {
-    background-color: #cdcdcd !important;
-    color: #626262 !important;
-}
 
 .betterNav {
     background-color: #e64110 !important;
@@ -15,9 +11,9 @@ body {
     padding-right: 5px;
 }
 
-.appContainer {
-    color: #626262 !important;
-    background-color: #eeb45a !important;
+.appContent {
+    background-color: whitesmoke !important;
+    color: #1e2731;
 }
 
 /* General Styles */
