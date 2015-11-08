@@ -1,6 +1,11 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents) {
+//Need this to display files and things
+.config(function($compileProvider){
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+})
+
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -48,6 +53,11 @@ angular.module('starter.controllers', [])
   }
 
   if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+  //Go to a new state
+  $scope.navigatePage = function(stateName) {
+      $state.go(stateName);
+  }
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -106,6 +116,7 @@ angular.module('starter.controllers', [])
               for(var i=0; i < data.length; i++)
               {
                   decryptedDocs[i] = {};
+
                   //Decrypt the title
                   var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
 
@@ -131,6 +142,28 @@ angular.module('starter.controllers', [])
 
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
+
+                    //Init the images array
+                    decryptedDocs[i].images = [];
+
+                    //Decrypt all the files and images
+                    for(var j = 0; j < data[i].images.length; j++)
+                    {
+
+                        //Decrypt the images/files
+                        var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
+
+                        //check if decrypted correctly
+                        if(/^data:/.test(decryptedImg)){
+                              alert("Invalid decryption key! Please log in!");
+                              $scope.modal.show();
+                              break;
+                          }
+
+                        //Save to decryption object
+                        decryptedDocs[i].images[j] = decryptedImg;
+
+                    }
               }
 
               //Set the decyption object
@@ -145,6 +178,7 @@ angular.module('starter.controllers', [])
       }
   }
 
+  //Get the users Documents
   $scope.getDocuments();
 
 // END APP CONTROLLER
@@ -209,8 +243,8 @@ angular.module('starter.controllers', [])
             $timeout(function () {
                 $scope.reInitModal();
             }, 10);
-        }, function(){
-            alert("FAILURE!");
+        }, function(err){
+            alert(angular.toJson(err));
         });
 
     }
@@ -242,20 +276,43 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker) {
+.controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http,
+    Documents, $timeout, $cordovaFile, $window) {
+
+    //Initialize the new document
+    $scope.newDoc = {};
+
+    //Initialize the images array
+    $scope.addedFiles = [];
+
+    //Grab the sessionToken
+    $scope.sessionToken = sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Initialize the files array
+    $scope.uploadImage;
+
+    $scope.docSelect = function(){
+        ionic.trigger('click', { target: document.getElementById('fileInput') });
+    }
+
+    // $scope.getDoc = function(target){
+    //     var file = target.files[0];
+    //     $scope.addedFiles.push(file.name);
+    //     $scope.$apply();
+    // };
 
     //Get a photo from the gallery
     //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function() {
 
     var options = {
-        quality: 75
+        quality: 75,
+        maximumImagesCount: 1
 
     };
 
-    $cordovaImagePicker.getPictures().then(function(imageData) {
-        console.log("img URI= " + imageData);
-        //Here you will be getting image data
+    $cordovaImagePicker.getPictures(options).then(function(imageData) {
+        $scope.addedFiles.push(imageData[0]);
     }, function(err) {
         alert("Failed because: " + err);
         console.log('Failed because: ' + err);
@@ -268,15 +325,84 @@ angular.module('starter.controllers', [])
 
         //Options for the Photo
         var options = {
-            quality: 75
+            quality: 75,
+            saveToPhotoAlbum: false
         };
 
-        $cordovaCamera.getPicture().then(function(imageData) {
-            console.log("img URI= " + imageData);
-            //Here you will be getting image data
+        //Open the camera to take the picture
+        $cordovaCamera.getPicture(options).then(function(imageData) {
+
+            //save the image URI
+            $scope.addedFiles.push(imageData);
+
         }, function(err) {
             alert("Failed because: " + err);
             console.log('Failed because: ' + err);
+        });
+    }
+
+    //Convert file url to Blob
+    // function dataURItoBlob(dataURI) {
+    //     // convert base64 to raw binary data held in a string
+    //     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    //     var byteString = atob(dataURI.split(',')[1]);
+    //
+    //     // separate out the mime component
+    //     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    //
+    //     // write the bytes of the string to an ArrayBuffer
+    //     var ab = new ArrayBuffer(byteString.length);
+    //     var ia = new Uint8Array(ab);
+    //     for (var i = 0; i < byteString.length; i++) {
+    //         ia[i] = byteString.charCodeAt(i);
+    //     }
+    //
+    //     // write the ArrayBuffer to a blob, and you're done
+    //     var bb = new BlobBuilder();
+    //     bb.append(ab);
+    //     return bb.getBlob(mimeString);
+    // }
+
+    //Submit the document to the backend
+    $scope.submitDoc = function() {
+
+        //Get our encrypt Key
+        var encryptKey = window.localStorage.getItem("key");
+
+        //First Encrypt the title
+        var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey);
+
+        //Then Encrypt the description
+        //First Encrypt the title
+        var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
+
+        //Our array of images
+        var imageArray = [];
+
+        //Options for the file upload
+        var options = {};
+
+        for(var i = 0; i < $scope.addedFiles.length; i++)
+        {
+			var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
+
+            imageArray.push(encrypted.toString());
+        }
+
+        //Now create our payload to send to the backend
+        var payload = {
+          sessionToken: $scope.sessionToken,
+          title: encryptTitle.toString(),
+          body: encryptDesc.toString(),
+          images: imageArray
+        };
+
+        Documents.create(payload, function(data, status) {
+          alert("dfd2");
+
+          //Go Back Home
+        }, function(err){
+          alert(angular.toJson(err));
         });
     }
 })
@@ -313,6 +439,11 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams) {
-
+.controller('DocumentCtrl', function($scope, $stateParams, Documents) {
+    $scope.document = {};
+    for(var i=0;i<$scope.documents.length;i++){
+        if($scope.documents[i]._id == $stateParams.documentId){
+            $scope.document = $scope.documents[i];
+        }
+    }
 });
