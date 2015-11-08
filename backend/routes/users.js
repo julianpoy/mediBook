@@ -96,7 +96,10 @@ router.post('/join', function(req, res, next) {
           var newUser = new User({
             username: req.body.username.toLowerCase(),
             password: hash,
-            salt: salt
+            salt: salt,
+            name: req.body.name,
+            dob: req.body.dob,
+            picture: req.body.picture
           }).save(function(err, newUser) {
             if (err) {
               console.log("Error saving user to DB!");
@@ -124,6 +127,42 @@ router.post('/join', function(req, res, next) {
         }
       });
   }
+});
+
+/* Update a User */
+router.put('/', function(req, res) {
+    if (!req.body.sessionToken) {
+        return res.status(412).json({
+            msg: "You must provide all required fields!"
+        });
+    }
+    SessionService.validateSession(req.body.sessionToken, function(err, accountId) {
+        if (err) {
+            res.json(err);
+        } else {
+            var updatedObj = {};
+
+            if (req.body.name && typeof req.body.name === 'string') updatedObj.name = req.body.name;
+            if (req.body.dob && typeof req.body.dob === 'string') updatedObj.dob = req.body.dob;
+            if (req.body.username && typeof req.body.username === 'string') updatedObj.username = req.body.username;
+            if (req.body.picture && typeof req.body.picture === 'string') updatedObj.picture = req.body.picture;
+
+            var setObj = {
+                $set: updatedObj
+            }
+
+            User.update({
+                    _id: accountId
+                }, setObj)
+                .exec(function(err, user) {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        res.status(200).send("Updated");
+                    }
+                })
+        }
+    });
 });
 
 module.exports = router;

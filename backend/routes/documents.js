@@ -45,9 +45,7 @@ router.post('/', function(req, res) {
 
 /* Get User Documents */
 router.get('/', function(req, res) {
-    console.log(req.query.sessionToken);
     SessionService.validateSession(req.query.sessionToken, function(err, userId) {
-        console.log(userId);
         if (err) {
             res.json(err);
         } else {
@@ -57,9 +55,9 @@ router.get('/', function(req, res) {
                 .select()
                 .exec(function(err, data) {
                     if (err) {
-                        return res.status(500).json({
+                        return res.status(500).json([{
                             msg: "Couldn't query the database for documents!"
-                        });
+                        }]);
                     } else {
                         res.status(200).json(data);
                     }

@@ -11,6 +11,18 @@ var User = new mongoose.Schema({
     },
     salt: {
         type: String
+    },
+    name: {
+        type: String,
+        default: ""
+    },
+    dob: {
+        type: String,
+        default: ""
+    },
+    picture: {
+        type: String,
+        default: ""
     }
 });
 
