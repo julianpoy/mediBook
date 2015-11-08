@@ -50,7 +50,7 @@ router.get('/', function(req, res) {
             res.json(err);
         } else {
             Document.find({
-                    _id: userId
+                    userId: userId
                 })
                 .select()
                 .exec(function(err, data) {
