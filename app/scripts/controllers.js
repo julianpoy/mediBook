@@ -458,7 +458,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state) {
+.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state, $ionicHistory) {
 
     //Get the sessionToken
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
@@ -511,7 +511,11 @@ angular.module('starter.controllers', [])
         //Send to the backend
         User.update(payload, function (data, status) {
 
-            //Success, go home!
+            //Success, go home,a nd clear the back buttons!
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
             $state.go('app.home');
 
         }, function () {
