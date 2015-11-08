@@ -1,5 +1,10 @@
 /* Empty. Add your own CSS if you like */
 
+/* Colors */
+body {
+    background-color: #cdcdcd;
+}
+
 /* General Styles */
 .center {
     text-align: center;
@@ -126,8 +131,7 @@ textarea:focus::-webkit-input-placeholder {
 }
 
 .uploadContainer {
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 }
 
 .spinnerText {

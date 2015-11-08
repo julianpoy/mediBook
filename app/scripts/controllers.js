@@ -1,10 +1,16 @@
 angular.module('starter.controllers', [])
 
 //Need this to display files and things
-.config(function($compileProvider){
+.config(function($compileProvider, $ionicConfigProvider){
+
+  //White list for image sanitization
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+
+  //Center the app title for android
+  $ionicConfigProvider.navBar.alignTitle('center');
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup, $ionicHistory) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents,
+    $state, $ionicPopup, $ionicHistory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -17,7 +23,7 @@ angular.module('starter.controllers', [])
   $scope.loginData = {};
 
   //Priority value array
-  $scope.priorityArray = ["Low", "Medium", "High"]
+  $scope.priorityArray = ["Low", "Medium", "High"];
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
