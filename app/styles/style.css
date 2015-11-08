@@ -116,11 +116,18 @@ textarea:focus::-webkit-input-placeholder {
 }
 
 .cameraPhoto {
-    max-width: 95% !important;
-    height: auto;
+    max-height: 300px !important;
+    width: auto;
     background-size: contain;
     background-position: center;
     border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.uploadContainer {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .spinnerText {
@@ -164,7 +171,7 @@ textarea:focus::-webkit-input-placeholder {
     margin-right: auto;
     max-width: 95%;
     border-radius: 3px;
-    
+
 }
 /* Fading Ng-hide */
 

@@ -354,6 +354,9 @@ angular.module('starter.controllers', [])
     //Initialize the images array
     $scope.addedFiles = [];
 
+    //Set the default priority
+    $scope.newDoc.priority = 2;
+
     //Grab the sessionToken
     $scope.sessionToken = sessionToken = window.localStorage.getItem("sessionToken");
 
@@ -428,7 +431,7 @@ angular.module('starter.controllers', [])
     //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function(event) {
 
-        if(mobileDevice)
+        if($scope.mobileDevice)
         {
             var options = {
                 quality: 75,
@@ -447,7 +450,7 @@ angular.module('starter.controllers', [])
                     document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
-                  $scope.addedFiles.push(base64);
+                  $scope.addedFiles[0] = base64;
 
 
                 });
@@ -479,7 +482,7 @@ angular.module('starter.controllers', [])
                     document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
-                  $scope.addedFiles.push(base64);
+                  $scope.addedFiles[0] = base64;
 
 
                 });
@@ -493,8 +496,6 @@ angular.module('starter.controllers', [])
 
         }
     }
-
-    $scope.newDoc.priority = 2;
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
