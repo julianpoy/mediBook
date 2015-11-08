@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
 .config(function($compileProvider){
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -49,7 +49,9 @@ angular.module('starter.controllers', [])
        template: body
      });
      alertPopup.then(function(res) {
-       callback();
+         if(callback){
+            callback();
+         }
      });
    };
 
