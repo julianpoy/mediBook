@@ -366,26 +366,35 @@ angular.module('starter.controllers', [])
     //     $scope.$apply();
     // };
 
+    var reader = new FileReader();
+
     //Get a photo from the gallery
     //http://learn.ionicframework.com/formulas/cordova-camera/
-    $scope.getPhoto = function() {
+    $scope.getPhoto = function(event) {
 
-    var options = {
-        quality: 75,
-        maximumImagesCount: 1
+        var options = {
+            quality: 75,
+            maximumImagesCount: 1
 
-    };
+        };
 
-    $cordovaImagePicker.getPictures(options).then(function(imageData) {
-        $scope.addedFiles.push(imageData[0]);
-    }, function(err) {
-        $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
-    });
+        $cordovaImagePicker.getPictures(options).then(function(imageData) {
+            var client = new XMLHttpRequest();
+            client.open('GET', imageData[0]);
+            client.addEventListener("load", function() {
+              if(client.responseText){
+                  $scope.addedFiles.push(client.responseText);
+              }
+            });
+            client.send();
+        }, function(err) {
+            $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
+        });
 
     };
 
     //http://ngcordova.com/docs/plugins/imagePicker/
-    $scope.takePhoto = function () {
+    $scope.takePhoto = function (event) {
 
         //Options for the Photo
         var options = {
@@ -395,10 +404,14 @@ angular.module('starter.controllers', [])
 
         //Open the camera to take the picture
         $cordovaCamera.getPicture(options).then(function(imageData) {
-
-            //save the image URI
-            $scope.addedFiles.push(imageData);
-
+            var client = new XMLHttpRequest();
+            client.open('GET', imageData);
+            client.addEventListener("load", function() {
+              if(client.responseText){
+                  $scope.addedFiles.push(client.responseText);
+              }
+            });
+            client.send();
         }, function(err) {
             $scope.showAlert("Error opening camera!", "Error details: " + angular.toJson(err));
         });
@@ -425,7 +438,7 @@ angular.module('starter.controllers', [])
 
         for(var i = 0; i < $scope.addedFiles.length; i++)
         {
-			var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
+            var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
 
             imageArray.push(encrypted.toString());
         }

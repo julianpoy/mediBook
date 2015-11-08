@@ -34,10 +34,10 @@
     <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/> -->
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "getPhoto()">Add Image From Gallery</button>
+    ng-click = "getPhoto($event)">Add Image From Gallery</button>
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "takePhoto()">Take Picture With Camera</button>
+    ng-click = "takePhoto($event)">Take Picture With Camera</button>
 
     <label class="item item-input">
       <span class="input-label">Description</span>

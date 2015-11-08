@@ -72,7 +72,8 @@
     },
     "cordova-plugin-file-transfer",
     "cordova-plugin-whitelist",
-    "cordova-plugin-file"
+    "cordova-plugin-file",
+    "cordova-plugin-whitelist"
   ],
   "cordovaPlatforms": [
     "android"
