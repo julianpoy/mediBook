@@ -85,11 +85,6 @@ angular.module('starter.controllers', [])
         $state.go(stateName, params);
     }
 
-  //Go to a new state
-  $scope.navigatePage = function(stateName) {
-      $state.go(stateName);
-  }
-
   //Return the app state
   $scope.isCurrentState = function (stateName) {
       if(stateName == $ionicHistory.currentStateName()) return true;
