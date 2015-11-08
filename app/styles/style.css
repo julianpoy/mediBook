@@ -93,6 +93,10 @@
     margin-top: 25px;
 }
 
+.noCircle.item-avatar > img:first-child {
+    border-radius: 0px !important;
+}
+
 /* Fading Ng-hide */
 
 

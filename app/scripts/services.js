@@ -2,7 +2,7 @@ angular.module('starter.services', ['ngResource'])
 
 .factory('User', ['$resource', function($resource) {
 
-return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
+return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
     { Id: '@Id' }, {
         join: {
             method: 'POST',
@@ -27,7 +27,6 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
 }])
 
 .factory('Documents', ['$resource', function($resource) {
-
     return $resource('http://jnode.ngrok.kondeo.com:8080/' + 'documents/:Id',
         { Id: '@Id' }, {
             create: {
@@ -49,5 +48,18 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
             }
 
         });
+}])
+
+.factory('DocumentById', ['$resource', function($resource) {
+
+return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/documents/:id',
+    { id: '@id' }, {
+        get: {
+            method: 'GET',
+            params: { id: '@id' },
+            isArray: false
+        }
+
+    } );
 
 }]);
