@@ -4,7 +4,6 @@ angular.module('starter.controllers', [])
 .config(function($compileProvider){
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
-
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
@@ -29,7 +28,14 @@ angular.module('starter.controllers', [])
 
     //Look for the session Token
     $scope.sessionToken;
-    if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    if(window.localStorage.getItem("sessionToken"))
+    {
+        //Save the sessiontoken
+        $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+        //Get the documents
+        $scope.getDocuments();
+    }
     else {
         //Open the login modal
         $scope.modal.show();
@@ -70,7 +76,11 @@ angular.module('starter.controllers', [])
     });
   }
 
-  if(window.localStorage.getItem("sessionToken"))  $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    //Go to a new state
+    $scope.navigatePage = function(stateName, params) {
+        console.log(params);
+        $state.go(stateName, params);
+    }
 
   //Go to a new state
   $scope.navigatePage = function(stateName) {
@@ -190,8 +200,10 @@ angular.module('starter.controllers', [])
               //Stop the spinner
               $scope.loading = false;
 
-          }, function(err){
+          }, function(){
               $scope.showAlert("Error processing!", "Error details: " + angular.toJson(err));
+              //Show a login
+              $scope.loading = false;
           });
       }
   }
@@ -403,6 +415,46 @@ angular.module('starter.controllers', [])
 .controller('HomeCtrl', function($scope, $cordovaFileTransfer, User) {
 
     //Get the sessionToken
+    if(window.localStorage.getItem("sessionToken"))
+    {
+        $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+        //Get the user object
+        $scope.getUser = function() {
+
+            //Create the payload
+            var payload = {
+                sessionToken: $scope.sessionToken
+            };
+
+            //Send to the backend
+            User.get(payload, function (data, status) {
+
+                //Success
+                $scope.user = data;
+
+            }, function (err) {
+                //FAILURE
+                console.log("GAME OVER! Could not get user");
+
+                //Set loading to false
+                $sscope.loading = false;
+
+                //Show the login modal
+                $scope.modal.show();
+            })
+
+        }
+
+        //Get the User
+        $scope.getUser();
+    }
+
+})
+
+.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User) {
+
+    //Get the sessionToken
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
     //Get the user object
@@ -427,8 +479,6 @@ angular.module('starter.controllers', [])
 
     //Get the User
     $scope.getUser();
-
-
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {
