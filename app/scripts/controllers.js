@@ -540,12 +540,15 @@ angular.module('starter.controllers', [])
         Documents.create(payload, function(data, status) {
 
             //Add document to $scope.documents
-            $scope.documents.push({
+            var pushObject = {
+                _id: (Math.random() * (10000000000000 - 1000) + 1000),
                 title: $scope.newDoc.title,
                 body: $scope.newDoc.desc,
                 priority: $scope.newDoc.priority,
                 images: $scope.addedFiles
-            });
+            }
+
+            $scope.documents.push(pushObject);
 
             //Success, go home, and clear the back buttons!
             $ionicHistory.nextViewOptions({
