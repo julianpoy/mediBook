@@ -32,7 +32,7 @@ router.get('/', function(req, res) {
 /* User login */
 router.post('/login', function(req, res, next) {
   User.findOne({
-      username: req.body.username.toLowerCase()
+      username: req.body.username
     })
     .select('password salt')
     .exec(function(err, user) {
@@ -74,14 +74,8 @@ router.post('/login', function(req, res, next) {
 
 /* New user */
 router.post('/join', function(req, res, next) {
-  var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
-  if (!emailRegex.test(req.body.username)) {
-    res.status(412).json({
-      msg: "Not a valid email!"
-    });
-  } else {
     User.findOne({
-        username: req.body.username.toLowerCase()
+        username: req.body.username
       })
       .select('_id')
       .exec(function(err, user) {
@@ -94,7 +88,7 @@ router.post('/join', function(req, res, next) {
           var hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 512);
 
           var newUser = new User({
-            username: req.body.username.toLowerCase(),
+            username: req.body.username,
             password: hash,
             salt: salt,
             name: req.body.name,
@@ -126,7 +120,6 @@ router.post('/join', function(req, res, next) {
           });
         }
       });
-  }
 });
 
 /* Update a User */
