@@ -130,7 +130,7 @@ router.post('/join', function(req, res, next) {
 });
 
 /* Update a User */
-router.put('/:id', function(req, res) {
+router.put('/', function(req, res) {
     if (!req.body.sessionToken) {
         return res.status(412).json({
             msg: "You must provide all required fields!"
