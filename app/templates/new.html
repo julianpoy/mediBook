@@ -10,22 +10,13 @@
     </label>
 
     <!-- Div to hold image or filename -->
-    <ion-item class = "uploadContainer" ng-repeat = "file in addedFiles">
+    <ion-item class = "uploadContainer">
 
-        <!-- Show the IMage -->
         <img class = "cameraPhoto"
-        ng-if = "file.endsWith('.jpg') ||
-        file.endsWith('.png') ||
-        file.endsWith('.jpeg')"
-         ng-src = "{{file}}" />
-
-         <!-- Show the file name if it is just a file -->
-         <div class = "center"
-         ng-if = "!file.endsWith('.jpg') &&
-         !file.endsWith('.png') &&
-         !file.endsWith('.jpeg')">{{file}}</div>
+         src = "" id="uploadedImage"/>
 
     </ion-item>
+
 
     <!-- Not allowing pdfs and things yet -->
     <!-- <button class="button button-outline button-positive newButton"

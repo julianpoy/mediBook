@@ -191,8 +191,11 @@ angular.module('starter.controllers', [])
                               break;
                           }
 
+                          var urlCreator = window.URL || window.webkitURL;
+                           var blob = new Blob([decryptedImg], {type: "image/png"});
+                           var blobURL = urlCreator.createObjectURL(blob);
                         //Save to decryption object
-                        decryptedDocs[i].images[j] = decryptedImg;
+                        decryptedDocs[i].images[j] = blobURL;
 
                     }
               }
@@ -342,7 +345,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http,
-    Documents, $timeout, $cordovaFile, $window) {
+    Documents, $timeout, $cordovaFile, $window, $sce) {
 
     //Initialize the new document
     $scope.newDoc = {};
@@ -381,10 +384,15 @@ angular.module('starter.controllers', [])
         $cordovaImagePicker.getPictures(options).then(function(imageData) {
             var client = new XMLHttpRequest();
             client.open('GET', imageData[0]);
+            client.responseType = "arraybuffer";
             client.addEventListener("load", function() {
-              if(client.responseText){
-                  $scope.addedFiles.push(client.responseText);
-              }
+
+              var arrayBufferView = new Uint8Array( this.response );
+              $scope.addedFiles.push(arrayBufferView);
+              var urlCreator = window.URL || window.webkitURL;
+               var blob = new Blob([arrayBufferView], {type: "image/png"});
+               var blobURL = urlCreator.createObjectURL(blob);
+               document.getElementById("uploadedImage").src = blobURL;
             });
             client.send();
         }, function(err) {
@@ -392,6 +400,8 @@ angular.module('starter.controllers', [])
         });
 
     };
+
+    $scope.blobs = [];
 
     //http://ngcordova.com/docs/plugins/imagePicker/
     $scope.takePhoto = function (event) {
@@ -406,10 +416,17 @@ angular.module('starter.controllers', [])
         $cordovaCamera.getPicture(options).then(function(imageData) {
             var client = new XMLHttpRequest();
             client.open('GET', imageData);
+            client.responseType = "arraybuffer";
             client.addEventListener("load", function() {
-              if(client.responseText){
-                  $scope.addedFiles.push(client.responseText);
-              }
+
+              var arrayBufferView = new Uint8Array( this.response );
+              $scope.addedFiles.push(arrayBufferView);
+              var urlCreator = window.URL || window.webkitURL;
+               var blob = new Blob([arrayBufferView], {type: "image/png"});
+               var blobURL = urlCreator.createObjectURL(blob);
+               document.getElementById("uploadedImage").src = blobURL;
+
+
             });
             client.send();
         }, function(err) {
@@ -590,4 +607,5 @@ angular.module('starter.controllers', [])
             $scope.document = $scope.documents[i];
         }
     }
+    document.getElementById("documentImage").src = $scope.document.images[0];
 });
