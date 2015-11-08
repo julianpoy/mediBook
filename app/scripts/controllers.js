@@ -142,17 +142,18 @@ angular.module('starter.controllers', [])
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
 
+                    //Init the images array
+                    decryptedDocs[i].images = [];
+
                     //Decrypt all the files and images
                     for(var j = 0; j < data.images.length; j++)
                     {
-                        //Init the images array
-                        decryptedDocs[i].images = [];
 
                         //Decrypt the images/files
                         var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
 
                         //check if decrypted correctly
-                        if(!/^data:/.test(decryptedDesc)){
+                        if(!/^data:/.test(decryptedImg)){
                               alert("Invalid decryption key! Please log in!");
                               $scope.modal.show();
                               break;
