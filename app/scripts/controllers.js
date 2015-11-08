@@ -175,20 +175,10 @@ angular.module('starter.controllers', [])
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
 
-                    //Decrypt the priority
-                    var decryptedPriority = CryptoJS.AES.decrypt(data[i].priority, encryptKey).toString(CryptoJS.enc.Latin1);
+                    //Get the object priority
+                    decryptedDocs[i].priority = data[i].priority;
 
-                    //Check if it decrypted correct
-                    if(/^data:/.test(decryptedDesc)){
-                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
-                          $scope.modal.show();
-                          break;
-                      }
-
-                    //Set it to decryption object
-                    decryptedDocs[i].priority = decryptedPriority;
-
-                    //Get the object if
+                    //Get the object id
                     decryptedDocs[i]._id = data[i]._id;
 
                     //Init the images array
@@ -511,9 +501,6 @@ angular.module('starter.controllers', [])
         //Then Encrypt the description
         var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
 
-        //Then Encrypt the priority
-        var encryptPriority = CryptoJS.AES.encrypt($scope.newDoc.priority, encryptKey);
-
         //Our array of images
         var imageArray = [];
 
@@ -532,7 +519,7 @@ angular.module('starter.controllers', [])
           sessionToken: $scope.sessionToken,
           title: encryptTitle.toString(),
           body: encryptDesc.toString(),
-          priority: encryptPriority.toString(),
+          priority: $scope.newDoc.priority,
           images: imageArray
         };
 
@@ -695,7 +682,7 @@ angular.module('starter.controllers', [])
         }
     }
 
-    if($scope.document.images)
+    if($scope.document.images.length > 0)
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
     }

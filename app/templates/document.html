@@ -11,12 +11,8 @@
 
         <ion-scroll class="col-50" zooming="true"
         style="width: 100%; height: 100%">
-            <img class="full-image" id = "documentImage">
+            <img class="full-image" ng-show = "document.images.length > 0" id = "documentImage">
         </ion-scroll>
-
-        <div class="item item-avatar noCircle center" ng-if = "document.images.length == 0">
-             <img src="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/document.png">
-        </div>
 
         <p>
           {{document.body}}
