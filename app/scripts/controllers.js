@@ -330,7 +330,13 @@ angular.module('starter.controllers', [])
                 $scope.reInitModal();
             }, 10);
         }, function(err){
-
+            $scope.loading = false;
+            if (err.status == 401) {
+                //Session is invalid!
+                $scope.modal.show();
+              } else {
+                $scope.showAlert("Error", err.data.msg);
+              }
         });
     }
 })
