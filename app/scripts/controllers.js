@@ -218,8 +218,11 @@ angular.module('starter.controllers', [])
       }
   }
 
-  //Get the users Documents
-  $scope.getDocuments();
+  $timeout(function(){
+      //Get the users Documents
+      $scope.getDocuments();
+  }, 0);
+
 // END APP CONTROLLER
 })
 
