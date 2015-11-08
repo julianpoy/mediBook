@@ -175,6 +175,19 @@ angular.module('starter.controllers', [])
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
 
+                    //Decrypt the priority
+                    var decryptedPriority = CryptoJS.AES.decrypt(data[i].priority, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                    //Check if it decrypted correct
+                    if(/^data:/.test(decryptedDesc)){
+                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
+                          $scope.modal.show();
+                          break;
+                      }
+
+                    //Set it to decryption object
+                    decryptedDocs[i].priority = decryptedPriority;
+
                     //Get the object if
                     decryptedDocs[i]._id = data[i]._id;
 
@@ -445,8 +458,10 @@ angular.module('starter.controllers', [])
         var encryptTitle = CryptoJS.AES.encrypt($scope.newDoc.title, encryptKey);
 
         //Then Encrypt the description
-        //First Encrypt the title
         var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
+
+        //Then Encrypt the priority
+        var encryptPriority = CryptoJS.AES.encrypt($scope.newDoc.priority, encryptKey);
 
         //Our array of images
         var imageArray = [];
@@ -466,6 +481,7 @@ angular.module('starter.controllers', [])
           sessionToken: $scope.sessionToken,
           title: encryptTitle.toString(),
           body: encryptDesc.toString(),
+          priority: encryptPriority.toString(),
           images: imageArray
         };
 
@@ -475,6 +491,7 @@ angular.module('starter.controllers', [])
             $scope.documents.push({
                 title: encryptTitle.toString(),
                 body: encryptDesc.toString(),
+                priority: encryptPriority.toString(),
                 images: imageArray
             });
 

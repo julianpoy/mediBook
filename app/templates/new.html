@@ -38,6 +38,17 @@
       ng-model="newDoc.desc" placeholder="Enter Description Here"></textarea>
     </label>
 
+    <label class="item item-input item-select">
+        <div class="input-label">
+          Priority
+        </div>
+        <select ng-model = "newDoc.priority">
+          <option value = "High">High</option>
+          <option value = "Medium" ng-selected="true">Medium</option>
+          <option value = "Low">Low</option>
+        </select>
+    </label>
+
     <button class="button button-outline button-positive newSubmitButton"
     ng-disabled = "!newDoc.title ||
     !newDoc.desc"

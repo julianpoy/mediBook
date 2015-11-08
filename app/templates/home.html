@@ -15,8 +15,7 @@
 
 
               <label class="item item-input">
-                <span class="input-label">Search</span>
-                <input type="text" ng-model="searchText" placeholder="Document title or description">
+                <input type="text" class = "searchText" ng-model="searchText" placeholder="Search by document title, priority, or description...">
               </label>
 
           <div ng-if "user.photo" class="item item-avatar" style="height: 100px;">
@@ -37,7 +36,7 @@
     </ion-list>
 
     <div class="row">
-      <div class="col-50" ng-repeat="doc in documents | filter: {title: searchText , desc: searchText} track by $index " >
+      <div class="col-50" ng-repeat="doc in documents | filter: {title: searchText , desc: searchText, priority: searchText} track by $index " >
           <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
               <div class="item item-avatar noCircle">
                 <img ng-if = "doc.images.length < 0" src="images/icon_document.png">

@@ -62,6 +62,10 @@ textarea:focus::-webkit-input-placeholder {
     margin-top: 40px;
 }
 
+.searchText {
+    text-align: center;
+}
+
 .keyDec {
     margin-bottom: 10px;
 }
