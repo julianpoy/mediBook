@@ -20,6 +20,12 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
             method: 'GET',
             params: { Id: '' },
             isArray: false
+        },
+
+        update: {
+            method: 'PUT',
+            params: { Id: '' },
+            isArray: false
         }
 
     } );

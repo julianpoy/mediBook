@@ -218,7 +218,6 @@ angular.module('starter.controllers', [])
 
   //Get the users Documents
   $scope.getDocuments();
-
 // END APP CONTROLLER
 })
 
@@ -466,10 +465,11 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User) {
+.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state, $ionicHistory) {
 
-    //Get the sessionToken
+    //Get the sessionToken, and key
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    var encryptKey = window.localStorage.getItem("key");
 
     //Get the user object
     $scope.getUser = function() {
@@ -485,6 +485,14 @@ angular.module('starter.controllers', [])
             //Success
             $scope.user = data;
 
+            //Initialize user input
+            $scope.userInput = {};
+
+            //Set up all the ng-model
+            $scope.userInput.email = CryptoJS.AES.decrypt($scope.user.username, encryptKey).toString(CryptoJS.enc.Latin1);
+            $scope.userInput.name = CryptoJS.AES.decrypt($scope.user.name, encryptKey).toString(CryptoJS.enc.Latin1);;
+            $scope.userInput.dob = CryptoJS.AES.decrypt($scope.user.dob, encryptKey).toString(CryptoJS.enc.Latin1);;
+
         }, function (err) {
             $scope.loading = false;
             if (err.status == 401) {
@@ -499,6 +507,40 @@ angular.module('starter.controllers', [])
 
     //Get the User
     $scope.getUser();
+
+
+
+    //Update the user and send to the backend
+    $scope.updateUser = function () {
+
+        //Encrypt the stuff!
+        var encryptEmail = CryptoJS.AES.encrypt($scope.userInput.email, encryptKey);
+        var encryptName = CryptoJS.AES.encrypt($scope.userInput.name, encryptKey);
+        var encryptDob = CryptoJS.AES.encrypt($scope.userInput.dob, encryptKey);
+
+        //Create the payload
+        var payload = {
+            sessionToken: $scope.sessionToken,
+            username: encryptEmail.toString(),
+            name: encryptName.toString(),
+            dob: encryptDob.toString()
+        }
+
+        //Send to the backend
+        User.update(payload, function (data, status) {
+
+            //Success, go home,a nd clear the back buttons!
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
+            $state.go('app.home');
+
+        }, function () {
+            //FAILURE
+            console.log("GAME OVER! Could not UPDATE user");
+        })
+    };
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {
