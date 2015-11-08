@@ -2,16 +2,21 @@
 
 /* Colors & nav */
 body {
-    background-color: #cdcdcd;
+    background-color: #cdcdcd !important;
+    color: #626262 !important;
 }
 
 .betterNav {
-
+    background-color: #e64110 !important;
 }
 
 .appPadding {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.itemBody {
+    color: #626262 !important;
 }
 
 /* General Styles */

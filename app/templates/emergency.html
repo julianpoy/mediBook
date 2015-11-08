@@ -1,5 +1,6 @@
 <ion-view view-title="Emergency">
   <ion-content>
+      <form name = "emergencyForm">
       <div class="list card">
           <div class="item item-divider">
               <h1 class="title center">MediBook+</h1>
@@ -11,13 +12,26 @@
 
             <label class="item item-input">
               <span class="input-label">E-mail/Username</span>
-              <input type="email" ng-model="emergency.username">
+              <input type="email" name = "emerEmail" ng-model="emergency.username">
             </label>
             <label class="item item-input">
               <span class="input-label">Encryption Key</span>
-              <input type="password" ng-model="emergency.password">
+              <input type="password" ng-model="emergency.key">
+            </label>
+
+            <label class="item">
+                <button class="button button-outline button-positive"
+                ng-click = "emergencyLogin()"
+                ng-disabled = "loading ||
+                !emergencyForm.emerEmail.$valid ||
+                !emergency.key ||
+                emergency.key.length < 8">Submit</button>
             </label>
         </div>
       </div>
+  </form>
+
+
+  <!-- List all documents below if successful -->
   </ion-content>
 </ion-view>

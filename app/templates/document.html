@@ -14,12 +14,20 @@
         </div>
 
     <ion-scroll class="item item-divider"
-    zooming="true" direction="xy">
+    zooming="true" direction="xy"
+    ng-show = "document.images.length > 0">
         <p>*Image can be scrolled and zoomed</p>
         <img class="full-image" ng-click = ""
-        ng-show = "document.images.length > 0"
         id = "documentImage">
     </ion-scroll>
+
+    <div class = "item item-body" ng-hide = "true">
+        <label class="item">
+            <button class="button button-outline button-positive"
+            ng-click = "deleteDocument()"
+            ng-disabled = "loading">Delete</button>
+        </label>
+    </div>
 
   </div>
   </ion-content>

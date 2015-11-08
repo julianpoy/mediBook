@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
         //Get the documents
         $scope.getDocuments();
     }
-    else {
+    else if(!$scope.isCurrentState('app.emergency')) {
         //Open the login modal
         $scope.modal.show();
     }
@@ -691,7 +691,11 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory, $cordovaFileOpener2) {
+.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory,
+    $cordovaFileOpener2, $ionicPopup, $state, DocumentById) {
+
+    //Get the sessionToken
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
 
     //Disable back when returning to home
     $ionicHistory.nextViewOptions({
@@ -709,6 +713,57 @@ angular.module('starter.controllers', [])
     if($scope.document.images && $scope.document.images.length > 0)
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
+    }
+
+    //Delete the document
+    $scope.deleteDocument = function() {
+
+        //Confirm with alrert
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Are You Sure?',
+          template: 'All documents are completely secure, and can only be accessed by you. Once you delete this it cannot be undone.'
+        });
+        confirmPopup.then(function(res) {
+          if(res) {
+            //confirmed
+
+            //Show the loading
+            $scope.loading = true;
+
+            //Create the payload
+            var payload = {
+                sessionToken: $scope.sessionToken,
+                id: $stateParams.documentId
+            }
+
+            //Send to the backend to be deleteDocument
+            DocumentById.delete(payload, function () {
+
+                //Success!
+                //remove from the scope.documents
+                for(var i=0; i < $scope.documents.length; i++){
+                    if($scope.documents[i]._id == $stateParams.documentId){
+                        $scope.documents.splice(i,1);
+                    }
+                }
+
+                //Now navigate back to home
+                $state.go('app.home');
+
+            }, function (err) {
+                $scope.loading = false;
+                if (err.status == 401) {
+                    //Session is invalid!
+                    $scope.modal.show();
+                  } else {
+                    $scope.showAlert("Error", err.data.msg);
+                  }
+            })
+
+          } else {
+            //Declined
+          }
+        });
     }
 
     //Open the image in gallery, not bring used, couldnt implmeent in time
@@ -738,5 +793,7 @@ angular.module('starter.controllers', [])
     $ionicHistory.nextViewOptions({
         disableBack: true
     });
+
+    //Variable to show show ngRepeat
 
 });
