@@ -1,8 +1,23 @@
 <ion-view view-title="Emergency">
   <ion-content>
-      <h1 class="title center">MediBook+</h1>
+      <div class="list card">
+          <div class="item item-divider">
+              <h1 class="title center">MediBook+</h1>
+          </div>
 
-      <h3>Welcome to the emergency page. Please enter a username/email, and their encryption key to access their medical info. These are private documents, and should <b>only be used in emergencies</b></h3>
+      <div class="item item-body">
 
+      <h2 class = "center">Welcome to the emergency page. Please enter a username/email, and their encryption key to access their medical info. These are private documents, and should <b>only be used in emergencies</b></h2>
+
+            <label class="item item-input">
+              <span class="input-label">E-mail/Username</span>
+              <input type="email" ng-model="emergency.username">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Encryption Key</span>
+              <input type="password" ng-model="emergency.password">
+            </label>
+        </div>
+      </div>
   </ion-content>
 </ion-view>
