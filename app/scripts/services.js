@@ -65,12 +65,6 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
                method: 'GET',
                params: { Id: '@Id' },
                isArray: false
-           },
-
-           singleDelete: {
-               method: 'DELETE',
-               params: { Id: '@Id' },
-               isArray: false
            }
 
         });

@@ -68,26 +68,6 @@ router.get('/', function(req, res) {
         });
 });
 
-/* Get User Documents in emergency*/
-router.get('/emergency', function(req, res) {
-        Document.find({
-                userId: userId
-            })
-            .select()
-            .sort('-priority')
-            .exec(function(err, data) {
-                if (err) {
-                    return res.status(500).json([{
-                        msg: "Couldn't query the database for documents!"
-                    }]);
-                } else {
-                    res.status(200).json(data);
-                }
-            });
-        }
-    });
-});
-
 /* Find my document from id */
 router.get('/:id', function(req, res) {
     Document.findOne({
