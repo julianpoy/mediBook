@@ -148,7 +148,7 @@ angular.module('starter.controllers', [])
                     decryptedDocs[i].images = [];
 
                     //Decrypt all the files and images
-                    for(var j = 0; j < data.images.length; j++)
+                    for(var j = 0; j < data[i].images.length; j++)
                     {
 
                         //Decrypt the images/files
