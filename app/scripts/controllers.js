@@ -711,7 +711,7 @@ angular.module('starter.controllers', [])
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
     }
 
-    //Open the image in gallery
+    //Open the image in gallery, not bring used, couldnt implmeent in time
     $scope.openImage = function () {
 
         //Open the image in document
@@ -723,9 +723,20 @@ angular.module('starter.controllers', [])
               conosole.log("hi!");
 
           }, function(err) {
+              console.log(err);
               // An error occurred. Show a message to the user
               $scope.showAlert("Error, could not open this image file...");
           });
 
     }
+})
+
+
+.controller('EmergencyCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+
+    //Disable back when returning to home
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+
 });

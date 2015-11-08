@@ -60,6 +60,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
 
+    .state('app.emergency', {
+      url: '/emergency',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/emergency.html',
+          controller: 'EmergencyCtrl'
+        }
+      }
+    })
+
   .state('app.single', {
     url: '/documents/:documentId',
     views: {

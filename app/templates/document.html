@@ -13,9 +13,13 @@
             </p>
         </div>
 
-    <div class="item item-divider">
-        <img class="full-image" ng-click = "openImage()" ng-show = "document.images.length > 0" id = "documentImage">
-    </div>
+    <ion-scroll class="item item-divider"
+    zooming="true" direction="xy">
+        <p>*Image can be scrolled and zoomed</p>
+        <img class="full-image" ng-click = ""
+        ng-show = "document.images.length > 0"
+        id = "documentImage">
+    </ion-scroll>
 
   </div>
   </ion-content>
