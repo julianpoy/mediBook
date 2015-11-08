@@ -364,9 +364,6 @@ angular.module('starter.controllers', [])
     //Submit the document to the backend
     $scope.submitDoc = function() {
 
-        //Our backend url and the file we would like to upload
-        var uploadUrl = "http://localhost:3000/documents/file";
-
         //Get our encrypt Key
         var encryptKey = window.localStorage.getItem("key");
 
@@ -385,49 +382,26 @@ angular.module('starter.controllers', [])
 
         for(var i = 0; i < $scope.addedFiles.length; i++)
         {
+			var encrypted = CryptoJS.AES.encrypt($scope.addedFiles[i], encryptKey);
 
-            $cordovaFile.onload = function(e){
-				// Use the CryptoJS library and the AES cypher to encrypt the
-				// contents of the file, held in e.target.result, with the password
-
-				var encrypted = CryptoJS.AES.encrypt(e.target.result, password);
-            }
-
-            //console.log($scope.addedFiles[i]);
-            console.log($scope.addedFiles);
-            $cordovaFileTransfer.upload(uploadUrl,
-                $cordovaFile.readAsDataURL(cordova.file.applicationDirectory, $scope.addedFiles[i]),
-                options, true)
-            .then(function(result) {
-                var imageName = JSON.parse(result.response);
-
-                imageArray.push(imageName.filename);
-
-              }, function(err) {
-                alert(err);
-              }, function (progress) {
-                $timeout(function () {
-                  $scope.downloadProgress = (progress.loaded / progress.total) * 100;
-                })
-              });
+            imageArray.push(encrypted.toString());
         }
 
+        //Now create our payload to send to the backend
+        var payload = {
+          sessionToken: $scope.sessionToken,
+          title: encryptTitle.toString(),
+          body: encryptDesc.toString(),
+          images: imageArray
+        };
 
-          //Now create our payload to send to the backend
-          var payload = {
-              sessionToken: $scope.sessionToken,
-              title: encryptTitle.toString(),
-              body: encryptDesc.toString(),
-              images: imageArray
-          };
+        Documents.create(payload, function(data, status) {
+          alert("dfd2");
 
-          Documents.create(payload, function(data, status) {
-              alert("dfd2");
-
-              //Go Back Home
-          }, function(err){
-              alert(angular.toJson(err));
-          });
+          //Go Back Home
+        }, function(err){
+          alert(angular.toJson(err));
+        });
     }
 })
 
