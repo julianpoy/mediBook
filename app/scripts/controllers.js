@@ -413,7 +413,7 @@ angular.module('starter.controllers', [])
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {
     $scope.document = {};
-    for(int i=0;i<$scope.documents.length;i++){
+    for(var i=0;i<$scope.documents.length;i++){
         if($scope.documents[i]._id == $stateParams.documentId){
             $scope.document = $scope.documents[i];
         }
