@@ -356,7 +356,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http,
-    Documents, $timeout, $cordovaFile, $window, $sce) {
+    Documents, $timeout, $cordovaFile, $window, $sce, $ionicHistory) {
 
     //Initialize the new document
     $scope.newDoc = {};
