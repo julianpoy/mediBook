@@ -54,6 +54,7 @@ router.get('/', function(req, res) {
                     userId: userId
                 })
                 .select()
+                .sort('-priority')
                 .exec(function(err, data) {
                     if (err) {
                         return res.status(500).json([{
