@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
 .config(function($compileProvider){
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup, $ionicHistory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -88,6 +88,12 @@ angular.module('starter.controllers', [])
   //Go to a new state
   $scope.navigatePage = function(stateName) {
       $state.go(stateName);
+  }
+
+  //Return the app state
+  $scope.isCurrentState = function (stateName) {
+      if(stateName == $ionicHistory.currentStateName()) return true;
+      else false;
   }
 
   // Triggered in the login modal to close it
@@ -434,7 +440,20 @@ angular.module('starter.controllers', [])
 
         Documents.create(payload, function(data, status) {
 
-          //Go Back Home
+            //Add document to $scope.documents
+            $scope.documents.push({
+                title: encryptTitle.toString(),
+                body: encryptDesc.toString(),
+                images: imageArray
+            });
+
+            //Success, go home, and clear the back buttons!
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+
+            $state.go('app.home');
+
         }, function(err){
             $scope.loading = false;
             if (err.status == 401) {

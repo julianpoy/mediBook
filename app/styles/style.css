@@ -7,6 +7,22 @@
     margin-right: auto;
 }
 
+input::-webkit-input-placeholder {
+   animation: fadeIn .5s;
+}
+
+input:focus::-webkit-input-placeholder {
+   animation: fadeOut .5s;
+}
+
+textarea::-webkit-input-placeholder {
+   animation: fadeOut .5s;
+}
+
+textarea:focus::-webkit-input-placeholder {
+   animation: fadeOut .5s;
+}
+
 .title {
     font-size: 28px !important;
     margin-left: auto !important;
@@ -71,11 +87,14 @@
 }
 
 .newButton {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    height: 75px !important;
 }
 
-.uploadContainer {
+.newSubmitButton {
+    margin-top: 20px;
 }
 
 .cameraPhoto {
@@ -110,6 +129,16 @@
     margin-right: 5px;
     width: 35px;
     vertical-align: middle;
+}
+
+.newTitle {
+    font-size: 24px !important;
+    line-height: inherit !important;
+}
+
+.descText {
+    position: relative !important;
+    bottom: 22px !important;
 }
 
 /* Fading Ng-hide */
