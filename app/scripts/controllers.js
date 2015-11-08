@@ -282,6 +282,8 @@ angular.module('starter.controllers', [])
         //Encrypt the username
         var encryptEmail = CryptoJS.AES.encrypt($scope.regData.username, $scope.regData.key);
 
+        console.log(encryptEmail.toString());
+
         var payload = {
             username: encryptEmail.toString(),
             password: $scope.regData.password
