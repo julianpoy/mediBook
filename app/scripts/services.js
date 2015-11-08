@@ -2,7 +2,7 @@ angular.module('starter.services', ['ngResource'])
 
 .factory('User', ['$resource', function($resource) {
 
-return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
+return $resource( 'http://srv.medibookplus.com:3005' + '/users/:Id',
     { Id: '@Id' }, {
         join: {
             method: 'POST',
@@ -34,7 +34,7 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
 
 .factory('Emergency', ['$resource', function($resource) {
 
-return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
+return $resource( 'http://srv.medibookplus.com:3005' + '/users/emergency',
     {  }, {
         go: {
             method: 'POST',
@@ -47,7 +47,7 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
 }])
 
 .factory('Documents', ['$resource', function($resource) {
-    return $resource('http://jnode.ngrok.kondeo.com:8080/' + 'documents/:Id',
+    return $resource('http://srv.medibookplus.com:3005/' + 'documents/:Id',
         { Id: '@Id' }, {
             create: {
                 method: 'POST',
@@ -72,7 +72,7 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
 
 .factory('DocumentById', ['$resource', function($resource) {
 
-return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/documents/:id',
+return $resource( 'http://srv.medibookplus.com:3005' + '/documents/:id',
     { id: '@id' }, {
         get: {
             method: 'GET',
