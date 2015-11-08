@@ -1,4 +1,4 @@
-# mediBook
+# MediBook+
 MediBook+ is a secure medical document application. Featuring end-to-end encryption, it allows you to securely store important and sensitive medical information. In the case of an emergency, emergency response can view your medical profile and history via a medical card.
 Features:
 - End-to-end encryption. All personal information is only visible on a device on which you enter a custom crypt code.
