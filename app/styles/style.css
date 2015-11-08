@@ -62,6 +62,14 @@
   animation: fadeInUp 1s;
 }
 
+.authFormPageTwo.ng-hide {
+  animation: fadeOutRight .5s;
+}
+
+.loginBack {
+    
+}
+
 .newButton {
     margin-top: 20px;
     margin-bottom: 20px;
