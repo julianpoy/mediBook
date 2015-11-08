@@ -28,6 +28,7 @@ router.post('/', function(req, res) {
                 userId: userId,
                 title: req.body.title,
                 body: req.body.body,
+                priority: req.body.priority,
                 images: req.body.images
             }).save(function(err, document) {
                 if (err) {
