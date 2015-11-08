@@ -1,5 +1,5 @@
-<ion-view view-title="New" ng-controller = "NewCtrl">
-  <ion-content>
+<ion-view view-title="New">
+  <ion-content ng-controller = "NewCtrl">
     <h1 class = "center">New Document</h1>
 
     <form method="post" enctype="multipart/form-data">
@@ -9,17 +9,48 @@
       <input type="text" ng-model="newDoc.title">
     </label>
 
+    <!-- Div to hold image or filename -->
+    <ion-item class = "uploadContainer" ng-repeat = "file in addedFiles">
+
+        <!-- Show the IMage -->
+        <img class = "cameraPhoto"
+        ng-if = "file.endsWith('.jpg') ||
+        file.endsWith('.png') ||
+        file.endsWith('.jpeg')"
+         ng-src = "{{file}}" />
+
+         <!-- Show the file name if it is just a file -->
+         <div class = "center"
+         ng-if = "!file.endsWith('.jpg') &&
+         !file.endsWith('.png') &&
+         !file.endsWith('.jpeg')">{{file}}</div>
+
+    </ion-item>
+
+    <!-- Not allowing pdfs and things yet -->
+    <!-- <button class="button button-outline button-positive newButton"
+    ng-click = "docSelect()">Add File From Documents</button>
+
+    <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/> -->
+
     <button class="button button-outline button-positive newButton"
     ng-click = "getPhoto()">Add Image From Gallery</button>
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "showNextPage()">Take Picture With Camera</button>
+    ng-click = "takePhoto()">Take Picture With Camera</button>
 
     <label class="item item-input">
       <span class="input-label">Description</span>
       <textarea rows="8" cols="10"
-      ng-model="newDoc.desc">
+      ng-model="newDoc.desc"></textarea>
     </label>
+
+    <button class="button button-outline button-positive newButton"
+    ng-disabled = "!newDoc.title ||
+    !newDoc.desc"
+    ng-click = "submitDoc()">Submit</button>
+
+
     </form>
   </ion-content>
 </ion-view>

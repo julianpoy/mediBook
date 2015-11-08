@@ -69,7 +69,10 @@
     {
       "locator": "http://github.com/don/cordova-filechooser.git",
       "id": "com.megster.cordova.FileChooser"
-    }
+    },
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "android"
