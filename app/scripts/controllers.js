@@ -794,6 +794,16 @@ angular.module('starter.controllers', [])
         disableBack: true
     });
 
-    //Variable to show show ngRepeat
+    //submit user info
+    $scope.emergencyLogin = function() {
+
+        //Create the payload
+        var payload = {
+            userId: emergency.userId
+        }
+
+        
+
+    }
 
 });

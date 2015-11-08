@@ -15,8 +15,9 @@ body {
     padding-right: 5px;
 }
 
-.itemBody {
+.appContainer {
     color: #626262 !important;
+    background-color: #eeb45a !important;
 }
 
 /* General Styles */
@@ -46,6 +47,10 @@ textarea:focus::-webkit-input-placeholder {
     font-size: 28px !important;
     margin-left: auto !important;
     margin-right: auto !important;
+}
+
+.addIcon {
+    background-image: url('../images/icon_add.png') !important;
 }
 
 .card {
