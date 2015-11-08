@@ -200,10 +200,14 @@ angular.module('starter.controllers', [])
               //Stop the spinner
               $scope.loading = false;
 
-          }, function(){
-              $scope.showAlert("Error processing!", "Error details: " + angular.toJson(err));
-              //Show a login
+          }, function(err){
               $scope.loading = false;
+              if (err.status == 401) {
+                  //Session is invalid!
+                  $scope.modal.show();
+                } else {
+                  $scope.showAlert("Error", err.data[0].msg);
+                }
           });
       }
   }
@@ -274,7 +278,8 @@ angular.module('starter.controllers', [])
                 $scope.reInitModal();
             }, 10);
         }, function(err){
-            $scope.showAlert("Error registering!", "Error details: " + angular.toJson(err));
+            $scope.loading = false;
+            $scope.showAlert("Error", err.data.msg);
         });
 
     }
@@ -407,7 +412,13 @@ angular.module('starter.controllers', [])
 
           //Go Back Home
         }, function(err){
-          $scope.showAlert("Error creating document!", "Error details: " + angular.toJson(err));
+            $scope.loading = false;
+            if (err.status == 401) {
+                //Session is invalid!
+                $scope.modal.show();
+              } else {
+                $scope.showAlert("Error", err.data.msg);
+              }
         });
     }
 })
@@ -434,14 +445,13 @@ angular.module('starter.controllers', [])
                 $scope.user = data;
 
             }, function (err) {
-                //FAILURE
-                console.log("GAME OVER! Could not get user");
-
-                //Set loading to false
-                $sscope.loading = false;
-
-                //Show the login modal
-                $scope.modal.show();
+                $scope.loading = false;
+                if (err.status == 401) {
+                    //Session is invalid!
+                    $scope.modal.show();
+                  } else {
+                    $scope.showAlert("Error", err.data[0].msg);
+                  }
             })
 
         }
@@ -471,8 +481,14 @@ angular.module('starter.controllers', [])
             //Success
             $scope.user = data;
 
-        }, function () {
-            $scope.showAlert("Your session is invalid", "Please use the sidebar to login again");
+        }, function (err) {
+            $scope.loading = false;
+            if (err.status == 401) {
+                //Session is invalid!
+                $scope.modal.show();
+              } else {
+                $scope.showAlert("Error", err.data.msg);
+              }
         })
 
     }
