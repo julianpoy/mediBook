@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
 .config(function($compileProvider){
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, Documents, $state, $ionicPopup) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -41,6 +41,28 @@ angular.module('starter.controllers', [])
         $scope.modal.show();
     }
   });
+
+  // An alert dialog
+   $scope.showAlert = function(title, body, callback) {
+     var alertPopup = $ionicPopup.alert({
+       title: title,
+       template: body
+     });
+     alertPopup.then(function(res) {
+         if(callback){
+            callback();
+         }
+     });
+   };
+
+   if(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isIPad() || ionic.Platform.isWindowsPhone()){
+       //Listen for offline event
+       document.addEventListener("offline", offlineEvent(), false);
+         function offlineEvent() {
+             // Handle the offline event
+             $scope.showAlert("You are offline!", "This app is based on a web backend, and requires internet connection to function correctly.");
+         }
+     }
 
   //Reinitialize modal
   $scope.reInitModal = function() {
@@ -132,7 +154,7 @@ angular.module('starter.controllers', [])
 
                   //Check if it decrypted correctly
                   if(/^data:/.test(decryptedTitle)){
-                      alert("Invalid decryption key! Please log in!");
+                      $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                         $scope.modal.show();
                       break;
                   }
@@ -145,7 +167,7 @@ angular.module('starter.controllers', [])
 
                     //Check if it decrypted correct
                     if(/^data:/.test(decryptedDesc)){
-                          alert("Invalid decryption key! Please log in!");
+                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                           $scope.modal.show();
                           break;
                       }
@@ -165,7 +187,7 @@ angular.module('starter.controllers', [])
 
                         //check if decrypted correctly
                         if(/^data:/.test(decryptedImg)){
-                              alert("Invalid decryption key! Please log in!");
+                              $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
                               $scope.modal.show();
                               break;
                           }
@@ -182,10 +204,14 @@ angular.module('starter.controllers', [])
               //Stop the spinner
               $scope.loading = false;
 
-          }, function(){
-              //Show a login
+          }, function(err){
               $scope.loading = false;
-              $scope.modal.show();
+              if (err.status == 401) {
+                  //Session is invalid!
+                  $scope.modal.show();
+                } else {
+                  $scope.showAlert("Error", err.data[0].msg);
+                }
           });
       }
   }
@@ -256,7 +282,8 @@ angular.module('starter.controllers', [])
                 $scope.reInitModal();
             }, 10);
         }, function(err){
-            alert(angular.toJson(err));
+            $scope.loading = false;
+            $scope.showAlert("Error", err.data.msg);
         });
 
     }
@@ -282,8 +309,8 @@ angular.module('starter.controllers', [])
             $timeout(function () {
                 $scope.reInitModal();
             }, 10);
-        }, function(){
-            alert("FAILURE!");
+        }, function(err){
+
         });
     }
 })
@@ -326,8 +353,7 @@ angular.module('starter.controllers', [])
     $cordovaImagePicker.getPictures(options).then(function(imageData) {
         $scope.addedFiles.push(imageData[0]);
     }, function(err) {
-        alert("Failed because: " + err);
-        console.log('Failed because: ' + err);
+        $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
     });
 
     };
@@ -348,32 +374,9 @@ angular.module('starter.controllers', [])
             $scope.addedFiles.push(imageData);
 
         }, function(err) {
-            alert("Failed because: " + err);
-            console.log('Failed because: ' + err);
+            $scope.showAlert("Error opening camera!", "Error details: " + angular.toJson(err));
         });
     }
-
-    //Convert file url to Blob
-    // function dataURItoBlob(dataURI) {
-    //     // convert base64 to raw binary data held in a string
-    //     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    //     var byteString = atob(dataURI.split(',')[1]);
-    //
-    //     // separate out the mime component
-    //     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    //
-    //     // write the bytes of the string to an ArrayBuffer
-    //     var ab = new ArrayBuffer(byteString.length);
-    //     var ia = new Uint8Array(ab);
-    //     for (var i = 0; i < byteString.length; i++) {
-    //         ia[i] = byteString.charCodeAt(i);
-    //     }
-    //
-    //     // write the ArrayBuffer to a blob, and you're done
-    //     var bb = new BlobBuilder();
-    //     bb.append(ab);
-    //     return bb.getBlob(mimeString);
-    // }
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
@@ -410,11 +413,16 @@ angular.module('starter.controllers', [])
         };
 
         Documents.create(payload, function(data, status) {
-          alert("dfd2");
 
           //Go Back Home
         }, function(err){
-          alert(angular.toJson(err));
+            $scope.loading = false;
+            if (err.status == 401) {
+                //Session is invalid!
+                $scope.modal.show();
+              } else {
+                $scope.showAlert("Error", err.data.msg);
+              }
         });
     }
 })
@@ -441,14 +449,13 @@ angular.module('starter.controllers', [])
                 $scope.user = data;
 
             }, function (err) {
-                //FAILURE
-                console.log("GAME OVER! Could not get user");
-
-                //Set loading to false
-                $sscope.loading = false;
-
-                //Show the login modal
-                $scope.modal.show();
+                $scope.loading = false;
+                if (err.status == 401) {
+                    //Session is invalid!
+                    $scope.modal.show();
+                  } else {
+                    $scope.showAlert("Error", err.data[0].msg);
+                  }
             })
 
         }
@@ -478,9 +485,14 @@ angular.module('starter.controllers', [])
             //Success
             $scope.user = data;
 
-        }, function () {
-            //FAILURE
-            console.log("GAME OVER! Could not get user");
+        }, function (err) {
+            $scope.loading = false;
+            if (err.status == 401) {
+                //Session is invalid!
+                $scope.modal.show();
+              } else {
+                $scope.showAlert("Error", err.data.msg);
+              }
         })
 
     }
