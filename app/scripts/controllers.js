@@ -452,7 +452,11 @@ angular.module('starter.controllers', [])
     //Get the sessionToken
     if(window.localStorage.getItem("sessionToken"))
     {
+        //Get the sessionToken and key
         $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+        //Get our encrypt Key
+        var encryptKey = window.localStorage.getItem("key");
 
         //Get the user object
         $scope.getUser = function() {
@@ -465,8 +469,11 @@ angular.module('starter.controllers', [])
             //Send to the backend
             User.get(payload, function (data, status) {
 
-                //Success
-                $scope.user = data;
+                //Success, Decrypt the data
+                $scope.user = {};
+
+                $scope.user.name = CryptoJS.AES.decrypt(data.name, encryptKey).toString(CryptoJS.enc.Latin1);
+                $scope.user.dob = CryptoJS.AES.decrypt(data.dob, encryptKey).toString(CryptoJS.enc.Latin1);
 
             }, function (err) {
                 $scope.loading = false;

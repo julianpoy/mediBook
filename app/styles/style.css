@@ -66,8 +66,8 @@
   animation: fadeOutRight .5s;
 }
 
-.loginBack {
-    
+.homeUser {
+    margin-top: 0px !important;
 }
 
 .newButton {
