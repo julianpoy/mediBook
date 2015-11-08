@@ -10,22 +10,13 @@
     </label>
 
     <!-- Div to hold image or filename -->
-    <ion-item class = "uploadContainer" ng-repeat = "file in addedFiles">
+    <ion-item class = "uploadContainer">
 
-        <!-- Show the IMage -->
         <img class = "cameraPhoto"
-        ng-if = "file.endsWith('.jpg') ||
-        file.endsWith('.png') ||
-        file.endsWith('.jpeg')"
-         ng-src = "{{file}}" />
-
-         <!-- Show the file name if it is just a file -->
-         <div class = "center"
-         ng-if = "!file.endsWith('.jpg') &&
-         !file.endsWith('.png') &&
-         !file.endsWith('.jpeg')">{{file}}</div>
+         src = "" id="uploadedImage"/>
 
     </ion-item>
+
 
     <!-- Not allowing pdfs and things yet -->
     <!-- <button class="button button-outline button-positive newButton"
@@ -34,10 +25,10 @@
     <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/> -->
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "getPhoto()">Add Image From Gallery</button>
+    ng-click = "getPhoto($event)">Add Image From Gallery</button>
 
     <button class="button button-outline button-positive newButton"
-    ng-click = "takePhoto()">Take Picture With Camera</button>
+    ng-click = "takePhoto($event)">Take Picture With Camera</button>
 
     <label class="item item-input">
       <span class="input-label">Description</span>
