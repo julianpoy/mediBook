@@ -72,6 +72,48 @@ router.post('/login', function(req, res, next) {
     });
 });
 
+/* User login */
+router.post('/emergency', function(req, res, next) {
+  User.findOne({
+      username: req.body.username
+    })
+    .select('password salt')
+    .exec(function(err, user) {
+      if (err) {
+        res.status(500).json({
+          msg: "Couldn't search the database for user!"
+        });
+      } else if (!user) {
+        res.status(401).json({
+          msg: "Wrong email!"
+        });
+      } else {
+        if (true) {
+          var token = crypto.randomBytes(48).toString('hex');
+          new Session({
+            accountId: user._id,
+            token: token
+          }).save(function(err) {
+            if (err) {
+              console.log("Error saving token to DB!");
+              res.status(500).json({
+                msg: "Error saving token to DB!"
+              });
+            } else {
+              res.status(200).json({
+                token: token
+              });
+            }
+          });
+        } else {
+          res.status(401).json({
+            msg: "Password is incorrect!"
+          });
+        }
+      }
+    });
+});
+
 /* New user */
 router.post('/join', function(req, res, next) {
     User.findOne({

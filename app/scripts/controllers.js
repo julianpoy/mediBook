@@ -790,7 +790,7 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('EmergencyCtrl', function($scope, $ionicHistory, Emergency) {
+.controller('EmergencyCtrl', function($scope, $ionicHistory, Emergency, $state) {
 
     //INit object for view scope
     $scope.emergency = {};
@@ -825,7 +825,7 @@ angular.module('starter.controllers', [])
 
             $scope.emergency = true;
 
-            $scope.go('app.home');
+            window.location = "/";
 
         }, function (err) {
 

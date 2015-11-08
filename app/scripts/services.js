@@ -35,10 +35,10 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
 .factory('Emergency', ['$resource', function($resource) {
 
 return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
-    { id: '@id' }, {
+    {  }, {
         go: {
             method: 'POST',
-            params: { id: '@id' },
+            params: { },
             isArray: false
         },
 
