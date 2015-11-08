@@ -460,8 +460,9 @@ angular.module('starter.controllers', [])
 
 .controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state, $ionicHistory) {
 
-    //Get the sessionToken
+    //Get the sessionToken, and key
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
+    var encryptKey = window.localStorage.getItem("key");
 
     //Get the user object
     $scope.getUser = function() {
@@ -481,9 +482,9 @@ angular.module('starter.controllers', [])
             $scope.userInput = {};
 
             //Set up all the ng-model
-            $scope.userInput.email = $scope.user.username;
-            $scope.userInput.name = $scope.user.name;
-            $scope.userInput.dob = $scope.user.dob;
+            $scope.userInput.email = CryptoJS.AES.decrypt($scope.user.username, encryptKey).toString(CryptoJS.enc.Latin1);
+            $scope.userInput.name = CryptoJS.AES.decrypt($scope.user.name, encryptKey).toString(CryptoJS.enc.Latin1);;
+            $scope.userInput.dob = CryptoJS.AES.decrypt($scope.user.dob, encryptKey).toString(CryptoJS.enc.Latin1);;
 
         }, function () {
             //FAILURE
@@ -500,12 +501,17 @@ angular.module('starter.controllers', [])
     //Update the user and send to the backend
     $scope.updateUser = function () {
 
+        //Encrypt the stuff!
+        var encryptEmail = CryptoJS.AES.encrypt($scope.userInput.email, encryptKey);
+        var encryptName = CryptoJS.AES.encrypt($scope.userInput.name, encryptKey);
+        var encryptDob = CryptoJS.AES.encrypt($scope.userInput.dob, encryptKey);
+
         //Create the payload
         var payload = {
             sessionToken: $scope.sessionToken,
-            username: $scope.userInput.email,
-            name: $scope.userInput.name,
-            dob: $scope.userInput.dob
+            username: encryptEmail.toString(),
+            name: encryptName.toString(),
+            dob: encryptDob.toString()
         }
 
         //Send to the backend
