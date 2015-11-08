@@ -3,7 +3,31 @@ var router = express.Router();
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var SessionService = require('../services/sessions.js');
 var Session = mongoose.model('Session');
+
+/* User Get */
+router.get('/', function(req, res) {
+    SessionService.validateSession(req.query.sessionToken, function(err, userId) {
+        if (err) {
+            res.json(err);
+        } else {
+            User.findOne({
+                    _id: userId
+                })
+                .select()
+                .exec(function(err, data) {
+                    if (err) {
+                        return res.status(500).json({
+                            msg: "Couldn't query the database for documents!"
+                        });
+                    } else {
+                        res.status(200).json(data);
+                    }
+                });
+            }
+    });
+});
 
 /* User login */
 router.post('/login', function(req, res, next) {
@@ -82,7 +106,7 @@ router.post('/join', function(req, res, next) {
             } else {
               var token = crypto.randomBytes(48).toString('hex');
               new Session({
-                user_id: newUser._id,
+                accountId: newUser._id,
                 token: token
               }).save(function(err) {
                 if (err) {

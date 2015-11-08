@@ -86,7 +86,8 @@ angular.module('starter.controllers', [])
 
   };
 
-  $scope.documents = {};
+  $scope.documents = [];
+  $scope.loading = false;
 
   //Query the backend for the documents
   $scope.getDocuments = function () {
@@ -94,8 +95,6 @@ angular.module('starter.controllers', [])
       //Check if we have the documents already
       if($scope.sessionToken)
       {
-          //Create the documents object
-          $scope.documents = [];
 
           //Set Loading to true
           $scope.loading = true;
@@ -408,7 +407,34 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('HomeCtrl', function($scope, $cordovaFileTransfer, Documents) {
+.controller('HomeCtrl', function($scope, $cordovaFileTransfer, User) {
+
+    //Get the sessionToken
+    $scope.sessionToken = window.localStorage.getItem("sessionToken");
+
+    //Get the user object
+    $scope.getUser = function() {
+
+        //Create the payload
+        var payload = {
+            sessionToken: $scope.sessionToken
+        };
+
+        //Send to the backend
+        User.get(payload, function (data, status) {
+
+            //Success
+            $scope.user = data;
+
+        }, function () {
+            //FAILURE
+            console.log("GAME OVER! Could not get user");
+        })
+
+    }
+
+    //Get the User
+    $scope.getUser();
 
 
 })

@@ -1,5 +1,5 @@
 <ion-view view-title="Home">
-  <ion-content>
+  <ion-content style="background-color: whitesmoke;">
 
       <!-- Loading Spinner -->
       <div class = "feedSpinnerContainer" ng-show = "loading">
@@ -8,21 +8,39 @@
       </div>
 
     <ion-list>
-      <div class = "list card" ng-repeat="doc in documents" href="#/app/document/{{doc._id}}">
-          <div class="item item-divider">
-              {{doc.title}}
-            </div>
+      <div class = "list card" href="#/app/document/{{doc._id}}">
 
-            <img class="full-image" src="{{doc.images[0]}}">
+          <!-- Title of App -->
+          <h2 class = "center">Medibook</h2>
 
-            <div class="item item-body">
-                <img ng-if = "getImage(doc)" id = "image-{{doc._id}}" class="full-image">
-                <p>
-                  {{doc.desc}}
-                </p>
-            </div>
+          <div ng-if "user.photo" class="item item-avatar" style="height: 100px;">
+            <img class = "center" style="margin-left: calc(50% - 45px);
+                height: 70px;
+                width: 70px;
+                max-width: initial;
+                max-height: initial;" src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Samantha_Ruth_Prabhu.jpg">
+          </div>
+
+          <div ng-if = "user.name || user.dob" class="item item-body">
+              <h4 class = "center" ng-if = "user.name">Name</h4><br />
+              <h4 class = "center" ng-if = "user.dob">DOB</h4><br />
+          </div>
+
+          <h6 class = "center">This app contains pertinant medical information for this user.</h6>
     </div>
     </ion-list>
+
+    <div class="row">
+      <div class="col-50" ng-repeat="doc in documents" >
+          <div class = "list card" href="#/app/document/{{doc._id}}">
+              <div class="item item-avatar">
+                <img src="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/document.png">
+                <h2>{{doc.title}}</h2>
+                <p>{{doc.priority}}</p>
+              </div>
+        </div>
+      </div>
+    </div>
 
     <div class = "feedSpinnerContainer" ng-if = "documents.length < 1 && loading == false">
         <h4 class = "center">No Documents Found. Please Create one by tapping the + above!</h4>
