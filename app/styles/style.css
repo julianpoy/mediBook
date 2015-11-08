@@ -1,8 +1,17 @@
 /* Empty. Add your own CSS if you like */
 
-/* Colors */
+/* Colors & nav */
 body {
     background-color: #cdcdcd;
+}
+
+.betterNav {
+
+}
+
+.appPadding {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* General Styles */
@@ -69,6 +78,17 @@ textarea:focus::-webkit-input-placeholder {
 
 .searchText {
     text-align: center;
+    width:100% !important;
+    padding-top: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.searchOuter {
+    padding-left: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding: 5px;
 }
 
 .keyDec {
