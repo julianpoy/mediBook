@@ -55,11 +55,13 @@ angular.module('starter.controllers', [])
      });
    };
 
-   //Listen for offline event
-   document.addEventListener("offline", offlineEvent(), false);
-     function offlineEvent() {
-         // Handle the offline event
-         $scope.showAlert("You are offline!", "This app is based on a web backend, and requires internet connection to function correctly.");
+   if(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isIPad() || ionic.Platform.isWindowsPhone()){
+       //Listen for offline event
+       document.addEventListener("offline", offlineEvent(), false);
+         function offlineEvent() {
+             // Handle the offline event
+             $scope.showAlert("You are offline!", "This app is based on a web backend, and requires internet connection to function correctly.");
+         }
      }
 
   //Reinitialize modal
