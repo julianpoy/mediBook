@@ -356,7 +356,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NewCtrl', function($scope, $cordovaCamera, $cordovaImagePicker, $cordovaFileTransfer, $http,
-    Documents, $timeout, $cordovaFile, $window, $sce) {
+    Documents, $timeout, $cordovaFile, $window, $sce, $ionicHistory, $state) {
 
     //Initialize the new document
     $scope.newDoc = {};
@@ -608,7 +608,6 @@ angular.module('starter.controllers', [])
         //Get the User
         $scope.getUser();
     }
-
 })
 
 .controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state, $ionicHistory) {
@@ -690,12 +689,13 @@ angular.module('starter.controllers', [])
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {
     $scope.document = {};
-    for(var i=0;i<$scope.documents.length;i++){
+    for(var i=0; i < $scope.documents.length; i++){
         if($scope.documents[i]._id == $stateParams.documentId){
             $scope.document = $scope.documents[i];
         }
     }
-    if($scope.document.images.length > 0)
+
+    if($scope.document.images)
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
     }

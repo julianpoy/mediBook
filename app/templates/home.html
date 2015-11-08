@@ -7,7 +7,7 @@
           <h4 class = "center spinnerText">Downloading and decrypting your documents. This may take a short while...</h4>
       </div>
 
-    <ion-list>
+    <ion-list ng-hide = "loading">
       <div class = "list card">
 
           <!-- Title of App -->
@@ -15,7 +15,7 @@
 
 
               <label class="item item-input">
-                <input type="text" class = "searchText" ng-model="searchText" placeholder="Search by document title, priority, or description...">
+                <input type="text" class = "searchText" ng-model="searchText" placeholder="Search by title, priority, or description">
               </label>
 
           <div ng-if "user.photo" class="item item-avatar" style="height: 100px;">
@@ -36,11 +36,10 @@
     </ion-list>
 
     <div class="row">
-      <div class="col-50" ng-repeat="doc in documents | filter: {title: searchText , desc: searchText, priority: searchText} track by $index " >
+      <div class="col-50" ng-repeat="doc in documents | filter:searchText track by $index " >
           <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
               <div class="item item-avatar noCircle">
-                <img ng-if = "doc.images.length < 0" src="images/icon_document.png">
-                <img ng-if = "doc.images.length > 0" src="{{doc.images[0]}}">
+                <img src="images/icon_document.png">
                 <h2>{{doc.title}}</h2>
                 <p>{{doc.priority}}</p>
               </div>
