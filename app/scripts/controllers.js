@@ -192,7 +192,6 @@ angular.module('starter.controllers', [])
 
   //Get the users Documents
   $scope.getDocuments();
-
 // END APP CONTROLLER
 })
 
@@ -459,7 +458,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User) {
+.controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state) {
 
     //Get the sessionToken
     $scope.sessionToken = window.localStorage.getItem("sessionToken");
@@ -478,6 +477,14 @@ angular.module('starter.controllers', [])
             //Success
             $scope.user = data;
 
+            //Initialize user input
+            $scope.userInput = {};
+
+            //Set up all the ng-model
+            $scope.userInput.email = $scope.user.username;
+            $scope.userInput.name = $scope.user.name;
+            $scope.userInput.dob = $scope.user.dob;
+
         }, function () {
             //FAILURE
             console.log("GAME OVER! Could not get user");
@@ -487,6 +494,31 @@ angular.module('starter.controllers', [])
 
     //Get the User
     $scope.getUser();
+
+
+
+    //Update the user and send to the backend
+    $scope.updateUser = function () {
+
+        //Create the payload
+        var payload = {
+            sessionToken: $scope.sessionToken,
+            username: $scope.userInput.email,
+            name: $scope.userInput.name,
+            dob: $scope.userInput.dob
+        }
+
+        //Send to the backend
+        User.update(payload, function (data, status) {
+
+            //Success, go home!
+            $state.go('app.home');
+
+        }, function () {
+            //FAILURE
+            console.log("GAME OVER! Could not UPDATE user");
+        })
+    };
 })
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {

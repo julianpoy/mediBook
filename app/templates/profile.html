@@ -1,30 +1,32 @@
 <ion-view view-title="My Profile">
   <ion-content>
-      
+      <form name = "updateForm">
+
       <label class="item item-input">
         <span class="input-label">E-mail</span>
-        <input type="email" ng-model="userInput.email">
+        <input name = "email"
+         type="email" ng-model="userInput.email" placeholder="email@email.com">
       </label>
 
       <label class="item item-input">
         <span class="input-label">Full Name</span>
-        <input type="email" ng-model="userInput.name">
+        <input type="text" ng-model="userInput.name" placeholder = "Scott Pilgrim">
       </label>
 
       <label class="item item-input">
         <span class="input-label">Date</span>
-        <input type="email" ng-model="userInput.dob">
+        <input type="text" ng-model="userInput.dob" placeholder="July 1st, 1995 or 7/18/81">
       </label>
 
       <label ng-show = "!confirmed" class="item">
           <button class="button button-outline button-positive"
-          ng-click = "showRegConfirm()"
+          ng-click = "updateUser()"
           ng-disabled = "loading ||
-          regData.key != regData.keyConfirm ||
-          !regData.key ||
-          !regData.keyConfirm ||
-          regData.key.length < 8 ||
-          regData.keyConfirm.length < 8">Submit</button>
+          !updateForm.email.$valid ||
+          (userInput.email == user.username &&
+          userInput.name == user.name &&
+          userInput.dob == user.dob)">Update</button>
       </label>
+    </form>
   </ion-content>
 </ion-view>
