@@ -4,10 +4,10 @@
     <form method="post" enctype="multipart/form-data">
 
     <!-- Div to hold image or filename -->
-    <ion-item class = "uploadContainer" ng-repeat = "file in addedFiles">
+    <ion-item class = "row uploadContainer" ng-repeat = "file in addedFiles">
 
         <!-- Show the IMage -->
-        <img class = "cameraPhoto"
+        <img class = "cameraPhoto col-50"
         ng-if = "file.endsWith('.jpg') ||
         file.endsWith('.png') ||
         file.endsWith('.jpeg')"
