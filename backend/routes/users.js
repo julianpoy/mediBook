@@ -96,7 +96,9 @@ router.post('/join', function(req, res, next) {
           var newUser = new User({
             username: req.body.username.toLowerCase(),
             password: hash,
-            salt: salt
+            salt: salt,
+            name: req.body.name,
+            dob: req.body.dob
           }).save(function(err, newUser) {
             if (err) {
               console.log("Error saving user to DB!");
