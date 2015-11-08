@@ -17,13 +17,20 @@
     ng-click = "docSelect()">Add File From Documents</button>
 
     <input type="file" id="fileInput" onchange="angular.element(this).scope().getDoc(this)" style="display: none;"/> -->
-    <div class = "row cameraContainer">
+    <div class = "row cameraContainer" ng-if = "mobileDevice">
         <button class="button button-outline button-positive newButton"
         ng-click = "getPhoto()">Open Gallery</button>
 
         <button class="button button-outline button-positive newButton"
         ng-click = "takePhoto()">Capture Picture</button>
     </div>
+
+    <div ng-if = "!mobileDevice">
+        <button class="button button-outline button-positive"
+        accept = ".png, .jpg"
+        ng-click = "getPhoto()">Open Image</button>
+    </div>
+
 
     <label class="item item-input">
       <span class="input-label newTitle">Title</span>
