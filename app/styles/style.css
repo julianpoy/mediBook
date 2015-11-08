@@ -97,10 +97,24 @@ textarea:focus::-webkit-input-placeholder {
     margin-top: 20px;
 }
 
+.cameraItem {
+    width: 40% !important;
+    max-height: 200px !important;
+    display: inline-block;
+}
+
+.cameraFlex {
+     display: flex !important;
+     flex-direction: row !important;
+     flex-wrap: wrap !important;
+     justify-content: space-around !important;
+}
+
 .cameraPhoto {
-    background-size: contain;
-    width: auto;
+    max-width: 95% !important;
     height: auto;
+    background-size: contain;
+    background-position: center;
     border-radius: 3px;
 }
 

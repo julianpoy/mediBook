@@ -4,22 +4,26 @@
     <form method="post" enctype="multipart/form-data">
 
     <!-- Div to hold image or filename -->
-    <ion-item class = "row uploadContainer" ng-repeat = "file in addedFiles">
+    <div class = "row">
+        <ion-item ng-repeat = "file in addedFiles">
 
-        <!-- Show the IMage -->
-        <img class = "cameraPhoto col-50"
-        ng-if = "file.endsWith('.jpg') ||
-        file.endsWith('.png') ||
-        file.endsWith('.jpeg')"
-         ng-src = "{{file}}" />
+            <!-- Show the IMage -->
+            <div class = "item cameraItem">
+                <img class = "cameraPhoto"
+                ng-if = "file.endsWith('.jpg') ||
+                file.endsWith('.png') ||
+                file.endsWith('.jpeg')"
+                 ng-src = "{{file}}" />
 
-         <!-- Show the file name if it is just a file -->
-         <div class = "center"
-         ng-if = "!file.endsWith('.jpg') &&
-         !file.endsWith('.png') &&
-         !file.endsWith('.jpeg')">{{file}}</div>
+                 <!-- Show the file name if it is just a file -->
+                 <div class = "center"
+                 ng-if = "!file.endsWith('.jpg') &&
+                 !file.endsWith('.png') &&
+                 !file.endsWith('.jpeg')">{{file}}</div>
+             </div>
 
-    </ion-item>
+        </ion-item>
+    </div>
 
     <!-- Not allowing pdfs and things yet -->
     <!-- <button class="button button-outline button-positive newButton"
@@ -38,7 +42,7 @@
       <span class="input-label newTitle">Title</span>
       <input type="text" ng-model="newDoc.title"
       class = "newTitle"
-      placeholder="Enter Document Title">
+      placeholder="Document Title">
     </label>
 
     <label class="item item-input">

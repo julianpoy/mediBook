@@ -180,6 +180,9 @@ angular.module('starter.controllers', [])
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
 
+                    //Get the object if
+                    decryptedDocs[i]._id = data[i]._id;
+
                     //Init the images array
                     decryptedDocs[i].images = [];
 
