@@ -76,6 +76,11 @@ textarea:focus::-webkit-input-placeholder {
     margin-top: 40px;
 }
 
+.docBody {
+    font-size: 20px !important;
+    margin-top: 0px !important;
+}
+
 .searchText {
     text-align: center;
     width:100% !important;
@@ -188,6 +193,7 @@ textarea:focus::-webkit-input-placeholder {
 
 .docTitle {
     margin-top: 0px !important;
+    margin-bottom: 0px;
 }
 
 .full-image {

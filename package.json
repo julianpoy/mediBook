@@ -73,7 +73,11 @@
     "cordova-plugin-file-transfer",
     "cordova-plugin-whitelist",
     "cordova-plugin-file",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    {
+      "locator": "https://github.com/pwlin/cordova-plugin-file-opener2.git",
+      "id": "cordova-plugin-file-opener2"
+    }
   ],
   "cordovaPlatforms": [
     "android"

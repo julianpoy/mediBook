@@ -548,7 +548,7 @@ angular.module('starter.controllers', [])
                 images: $scope.addedFiles
             }
 
-            $scope.documents.push(pushObject);
+            $scope.documents.unshift(pushObject);
 
             //Success, go home, and clear the back buttons!
             $ionicHistory.nextViewOptions({
@@ -691,7 +691,14 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams, Documents) {
+.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+
+    //Disable back when returning to home
+    $ionicHistory.nextViewOptions({
+        disableBack: true
+    });
+
+
     $scope.document = {};
     for(var i=0; i < $scope.documents.length; i++){
         if($scope.documents[i]._id == $stateParams.documentId){
