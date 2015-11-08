@@ -13,6 +13,8 @@
               {{doc.title}}
             </div>
 
+            <img class="full-image" ng-src="data:image/JPEG;base64,{{doc.images[0]}}">
+
             <div class="item item-body">
                 <img ng-if = "getImage(doc)" id = "image-{{doc._id}}" class="full-image">
                 <p>

@@ -22,18 +22,24 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080/' + 'users/:Id',
 
 .factory('Documents', ['$resource', function($resource) {
 
-    return $resource('http://jnode.ngrok.kondeo.com:8080/' + 'documents',
-        {}, {
+    return $resource('http://jnode.ngrok.kondeo.com:8080/' + 'documents/:Id',
+        { Id: '@Id' }, {
             create: {
                 method: 'POST',
-                params: {},
+                params: { Id: '' },
                 isArray: false
             },
 
            get: {
                method: 'GET',
-               params: {},
+               params: { Id: '' },
                isArray: true
+           },
+
+           single: {
+               method: 'GET',
+               params: { Id: '@Id' },
+               isArray: false
             }
 
         });
