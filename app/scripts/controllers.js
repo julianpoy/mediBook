@@ -131,7 +131,7 @@ angular.module('starter.controllers', [])
   $scope.getDocuments = function () {
 
       //Check if we have the documents already
-      if($scope.sessionToken)
+      if($scope.sessionToken && !$scope.isCurrentState('app.emergency'))
       {
 
           //Set Loading to true
@@ -787,7 +787,7 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('EmergencyCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+.controller('EmergencyCtrl', function($scope, $stateParams, Documents, $ionicHistory, Emergency) {
 
     //Disable back when returning to home
     $ionicHistory.nextViewOptions({
@@ -797,12 +797,85 @@ angular.module('starter.controllers', [])
     //submit user info
     $scope.emergencyLogin = function() {
 
+        //Set Loading to true
+        $scope.loading = true;
+
         //Create the payload
         var payload = {
             userId: emergency.userId
         }
 
-        
+        //Send it
+        Emergency.get(payload , function (data, status) {
+
+            //Handle the data, decrypt everything with the key
+            var encryptKey = $scope.emergency.key
+
+            var decryptedDocs = [];
+
+            //Decrypt all of the files in the data
+            for(var i=0; i < data.length; i++)
+            {
+                decryptedDocs[i] = {};
+
+                //Decrypt the title
+                var decryptedTitle = CryptoJS.AES.decrypt(data[i].title, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                //Check if it decrypted correctly
+                if(/^data:/.test(decryptedTitle)){
+                    $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
+                      $scope.modal.show();
+                    break;
+                }
+
+                  //Set the Title to our decrypted object
+                  decryptedDocs[i].title = decryptedTitle;
+
+                  //Decrypt the description
+                  var decryptedDesc = CryptoJS.AES.decrypt(data[i].body, encryptKey).toString(CryptoJS.enc.Latin1);
+
+                  //Check if it decrypted correct
+                  if(/^data:/.test(decryptedDesc)){
+                        $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
+                        $scope.modal.show();
+                        break;
+                    }
+
+                  //Set it to decryption object
+                  decryptedDocs[i].body = decryptedDesc;
+
+                  //Get the object priority
+                  decryptedDocs[i].priority = data[i].priority;
+
+                  //Get the object id
+                  decryptedDocs[i]._id = data[i]._id;
+
+                  //Init the images array
+                  decryptedDocs[i].images = [];
+
+                  //Decrypt the images/files
+                  var decryptedImg = CryptoJS.AES.decrypt(data[i].images[j], encryptKey).toString(CryptoJS.enc.Latin1);
+
+                  //check if decrypted correctly
+                  if(/^data:/.test(decryptedImg)){
+                        $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
+                        $scope.modal.show();
+                        break;
+                    }
+
+                  //Save to decryption object
+                  decryptedDocs[i].images[0] = decryptedImg;
+            }
+
+            //Set the decyption object
+            $scope.emergencyDocuments = decryptedDocs;
+
+            //Stop the spinner
+            $scope.loading = false;
+
+        }, function (err) {
+
+        })
 
     }
 

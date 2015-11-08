@@ -22,17 +22,25 @@ return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/:Id',
             isArray: false
         },
 
-        emergency: {
-            method: 'GET',
-            params: { Id: '@Id' },
-            isArray: false
-        },
-
         update: {
             method: 'PUT',
             params: { Id: '' },
             isArray: false
         }
+
+    } );
+
+}])
+
+.factory('Emergency', ['$resource', function($resource) {
+
+return $resource( 'http://jnode.ngrok.kondeo.com:8080' + '/users/emergency',
+    { id: '@id' }, {
+        get: {
+            method: 'GET',
+            params: { id: '@id' },
+            isArray: false
+        },
 
     } );
 

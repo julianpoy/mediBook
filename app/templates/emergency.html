@@ -30,5 +30,24 @@
         </div>
       </div>
   </form>
+
+   <!-- Loading Spinner -->
+    <div class = "feedSpinnerContainer" ng-show = "loading">
+        <ion-spinner class = "spinner-positive ionicSpinner"></ion-spinner>
+        <h4 class = "center spinnerText">Downloading and decrypting the documents. This may take a short while...</h4>
+    </div>
+
+    <!--List of documents -->
+    <div class="row">
+      <div class="col-50" ng-repeat="doc in documents | filter:searchText track by $index " >
+          <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
+              <div class="item item-avatar noCircle">
+                <img src="images/icon_document.png">
+                <h2>{{doc.title}}</h2>
+                <p>{{priorityArray[doc.priority - 1]}}</p>
+              </div>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
