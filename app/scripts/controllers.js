@@ -16,6 +16,9 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = {};
 
+  //Priority value array
+  $scope.priorityArray = ["Low", "Medium", "High"]
+
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope,
@@ -55,14 +58,11 @@ angular.module('starter.controllers', [])
      });
    };
 
-   // if(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isIPad() || ionic.Platform.isWindowsPhone()){
-   //     //Listen for offline event
-   //     document.addEventListener("offline", offlineEvent(), false);
-   //       function offlineEvent() {
-   //           // Handle the offline event
-   //           $scope.showAlert("You are offline!", "This app is based on a web backend, and requires internet connection to function correctly.");
-   //       }
-   //   }
+   //Check For mobile Devices
+   if(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isIPad() || ionic.Platform.isWindowsPhone()){
+       $scope.mobileDevice = true;
+   }
+   else $scope.mobileDevice = false;
 
   //Reinitialize modal
   $scope.reInitModal = function() {
@@ -175,20 +175,10 @@ angular.module('starter.controllers', [])
                     //Set it to decryption object
                     decryptedDocs[i].body = decryptedDesc;
 
-                    //Decrypt the priority
-                    var decryptedPriority = CryptoJS.AES.decrypt(data[i].priority, encryptKey).toString(CryptoJS.enc.Latin1);
+                    //Get the object priority
+                    decryptedDocs[i].priority = data[i].priority;
 
-                    //Check if it decrypted correct
-                    if(/^data:/.test(decryptedDesc)){
-                          $scope.showAlert("Invalid decryption key!", "Please use the side menu to log in again");
-                          $scope.modal.show();
-                          break;
-                      }
-
-                    //Set it to decryption object
-                    decryptedDocs[i].priority = decryptedPriority;
-
-                    //Get the object if
+                    //Get the object id
                     decryptedDocs[i]._id = data[i]._id;
 
                     //Init the images array
@@ -438,66 +428,73 @@ angular.module('starter.controllers', [])
     //http://learn.ionicframework.com/formulas/cordova-camera/
     $scope.getPhoto = function(event) {
 
-        var options = {
-            quality: 75,
-            maximumImagesCount: 1
+        if(mobileDevice)
+        {
+            var options = {
+                quality: 75,
+                maximumImagesCount: 1
 
-        };
+            };
 
-        $cordovaImagePicker.getPictures(options).then(function(imageData) {
-            var client = new XMLHttpRequest();
-            client.open('GET', imageData[0]);
-            client.responseType = "arraybuffer";
-            client.addEventListener("load", function() {
+            $cordovaImagePicker.getPictures(options).then(function(imageData) {
+                var client = new XMLHttpRequest();
+                client.open('GET', imageData[0]);
+                client.responseType = "arraybuffer";
+                client.addEventListener("load", function() {
 
-                var base64 = base64ArrayBuffer(this.response)
+                    var base64 = base64ArrayBuffer(this.response)
 
-                document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
-
-
-              $scope.addedFiles.push(base64);
+                    document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
+                  $scope.addedFiles.push(base64);
+
+
+                });
+                client.send();
+            }, function(err) {
+                $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
             });
-            client.send();
-        }, function(err) {
-            $scope.showAlert("Error opening gallery!", "Error details: " + angular.toJson(err));
-        });
 
-    };
+        $scope.blobs = [];
 
-    $scope.blobs = [];
+        //http://ngcordova.com/docs/plugins/imagePicker/
+        $scope.takePhoto = function (event) {
 
-    //http://ngcordova.com/docs/plugins/imagePicker/
-    $scope.takePhoto = function (event) {
+            //Options for the Photo
+            var options = {
+                quality: 75,
+                saveToPhotoAlbum: false
+            };
 
-        //Options for the Photo
-        var options = {
-            quality: 75,
-            saveToPhotoAlbum: false
-        };
+            //Open the camera to take the picture
+            $cordovaCamera.getPicture(options).then(function(imageData) {
+                var client = new XMLHttpRequest();
+                client.open('GET', imageData);
+                client.responseType = "arraybuffer";
+                client.addEventListener("load", function() {
 
-        //Open the camera to take the picture
-        $cordovaCamera.getPicture(options).then(function(imageData) {
-            var client = new XMLHttpRequest();
-            client.open('GET', imageData);
-            client.responseType = "arraybuffer";
-            client.addEventListener("load", function() {
+                    var base64 = base64ArrayBuffer(this.response)
 
-                var base64 = base64ArrayBuffer(this.response)
-
-                document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
+                    document.getElementById("uploadedImage").src = "data:image/png;base64," + base64;
 
 
-              $scope.addedFiles.push(base64);
+                  $scope.addedFiles.push(base64);
 
 
+                });
+                client.send();
+            }, function(err) {
+                $scope.showAlert("Error opening camera!", "Error details: " + angular.toJson(err));
             });
-            client.send();
-        }, function(err) {
-            $scope.showAlert("Error opening camera!", "Error details: " + angular.toJson(err));
-        });
+        }
+        }
+        else {
+
+        }
     }
+
+    $scope.newDoc.priority = 2;
 
     //Submit the document to the backend
     $scope.submitDoc = function() {
@@ -510,9 +507,6 @@ angular.module('starter.controllers', [])
 
         //Then Encrypt the description
         var encryptDesc = CryptoJS.AES.encrypt($scope.newDoc.desc, encryptKey);
-
-        //Then Encrypt the priority
-        var encryptPriority = CryptoJS.AES.encrypt($scope.newDoc.priority, encryptKey);
 
         //Our array of images
         var imageArray = [];
@@ -532,7 +526,7 @@ angular.module('starter.controllers', [])
           sessionToken: $scope.sessionToken,
           title: encryptTitle.toString(),
           body: encryptDesc.toString(),
-          priority: encryptPriority.toString(),
+          priority: $scope.newDoc.priority,
           images: imageArray
         };
 
@@ -540,10 +534,10 @@ angular.module('starter.controllers', [])
 
             //Add document to $scope.documents
             $scope.documents.push({
-                title: encryptTitle.toString(),
-                body: encryptDesc.toString(),
-                priority: encryptPriority.toString(),
-                images: imageArray
+                title: $scope.newDoc.title,
+                body: $scope.newDoc.desc,
+                priority: $scope.newDoc.priority,
+                images: $scope.addedFiles
             });
 
             //Success, go home, and clear the back buttons!
@@ -608,7 +602,6 @@ angular.module('starter.controllers', [])
         //Get the User
         $scope.getUser();
     }
-
 })
 
 .controller('ProfileCtrl', function($scope, $cordovaFileTransfer, User, $state, $ionicHistory) {
@@ -690,12 +683,13 @@ angular.module('starter.controllers', [])
 
 .controller('DocumentCtrl', function($scope, $stateParams, Documents) {
     $scope.document = {};
-    for(var i=0;i<$scope.documents.length;i++){
+    for(var i=0; i < $scope.documents.length; i++){
         if($scope.documents[i]._id == $stateParams.documentId){
             $scope.document = $scope.documents[i];
         }
     }
-    if($scope.document.images.length > 0)
+
+    if($scope.document.images && $scope.document.images.length > 0)
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
     }
