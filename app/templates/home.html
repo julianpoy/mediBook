@@ -36,7 +36,7 @@
     </ion-list>
 
     <div class="row">
-      <div class="col-50" ng-repeat="doc in documents | filter: {title: searchText , desc: searchText, priority: searchText} track by $index " >
+      <div class="col-50" ng-repeat="doc in documents" >
           <div class = "list card" ng-click = "navigatePage('app.single', {documentId: doc._id})">
               <div class="item item-avatar noCircle">
                 <img ng-if = "doc.images.length < 0" src="images/icon_document.png">
