@@ -4,26 +4,13 @@
     <form method="post" enctype="multipart/form-data">
 
     <!-- Div to hold image or filename -->
-    <div class = "row">
-        <ion-item ng-repeat = "file in addedFiles">
+    <ion-item class = "uploadContainer">
 
-            <!-- Show the IMage -->
-            <div class = "item cameraItem">
-                <img class = "cameraPhoto"
-                ng-if = "file.endsWith('.jpg') ||
-                file.endsWith('.png') ||
-                file.endsWith('.jpeg')"
-                 ng-src = "{{file}}" />
+        <img class = "cameraPhoto"
+         src = "" id="uploadedImage"/>
 
-                 <!-- Show the file name if it is just a file -->
-                 <div class = "center"
-                 ng-if = "!file.endsWith('.jpg') &&
-                 !file.endsWith('.png') &&
-                 !file.endsWith('.jpeg')">{{file}}</div>
-             </div>
+    </ion-item>
 
-        </ion-item>
-    </div>
 
     <!-- Not allowing pdfs and things yet -->
     <!-- <button class="button button-outline button-positive newButton"
