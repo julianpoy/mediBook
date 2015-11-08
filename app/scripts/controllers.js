@@ -178,7 +178,7 @@ angular.module('starter.controllers', [])
   }
 
   //Get the users Documents
-  //$scope.getDocuments();
+  $scope.getDocuments();
 
 // END APP CONTROLLER
 })
