@@ -319,6 +319,12 @@ angular.module('starter.controllers', [])
             }, function (err) {
                 //FAILURE
                 console.log("GAME OVER! Could not get user");
+
+                //Set loading to false
+                $sscope.loading = false;
+
+                //Show the login modal
+                $scope.modal.show();
             })
 
         }
