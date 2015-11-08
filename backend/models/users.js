@@ -19,6 +19,10 @@ var User = new mongoose.Schema({
     dob: {
         type: String,
         default: ""
+    },
+    picture: {
+        type: String,
+        default: ""
     }
 });
 

@@ -98,7 +98,8 @@ router.post('/join', function(req, res, next) {
             password: hash,
             salt: salt,
             name: req.body.name,
-            dob: req.body.dob
+            dob: req.body.dob,
+            picture: req.body.picture
           }).save(function(err, newUser) {
             if (err) {
               console.log("Error saving user to DB!");
@@ -144,6 +145,7 @@ router.put('/:id', function(req, res) {
             if (req.body.name && typeof req.body.name === 'string') updatedObj.name = req.body.name;
             if (req.body.dob && typeof req.body.dob === 'string') updatedObj.dob = req.body.dob;
             if (req.body.username && typeof req.body.username === 'string') updatedObj.username = req.body.username;
+            if (req.body.picture && typeof req.body.picture === 'string') updatedObj.picture = req.body.picture;
 
             var setObj = {
                 $set: updatedObj
