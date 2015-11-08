@@ -279,11 +279,8 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
 
-        //Encrypt the username
-        var encryptEmail = CryptoJS.AES.encrypt($scope.regData.username, $scope.regData.key);
-
         var payload = {
-            username: encryptEmail.toString(),
+            username: $scope.regData.username,
             password: $scope.regData.password
         };
 
@@ -310,11 +307,8 @@ angular.module('starter.controllers', [])
         //Set Loading to true
         $scope.loading = true;
 
-        //Encrypt the username
-        var encryptEmail = CryptoJS.AES.encrypt($scope.loginData.username, $scope.loginData.key);
-
         var payload = {
-            username: encryptEmail.toString(),
+            username: $scope.loginData.username,
             password: $scope.loginData.password
         };
 
@@ -548,14 +542,13 @@ angular.module('starter.controllers', [])
     $scope.updateUser = function () {
 
         //Encrypt the stuff!
-        var encryptEmail = CryptoJS.AES.encrypt($scope.userInput.email, encryptKey);
         var encryptName = CryptoJS.AES.encrypt($scope.userInput.name, encryptKey);
         var encryptDob = CryptoJS.AES.encrypt($scope.userInput.dob, encryptKey);
 
         //Create the payload
         var payload = {
             sessionToken: $scope.sessionToken,
-            username: encryptEmail.toString(),
+            username: $scope.userInput.email,
             name: encryptName.toString(),
             dob: encryptDob.toString()
         }
