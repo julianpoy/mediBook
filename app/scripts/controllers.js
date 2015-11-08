@@ -691,7 +691,7 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory) {
+.controller('DocumentCtrl', function($scope, $stateParams, Documents, $ionicHistory, $cordovaFileOpener2) {
 
     //Disable back when returning to home
     $ionicHistory.nextViewOptions({
@@ -709,5 +709,23 @@ angular.module('starter.controllers', [])
     if($scope.document.images && $scope.document.images.length > 0)
     {
         document.getElementById("documentImage").src = "data:image/png;base64," + $scope.document.images[0];
+    }
+
+    //Open the image in gallery
+    $scope.openImage = function () {
+
+        //Open the image in document
+        $cordovaFileOpener2.open(
+            "data:image/png;base64," + $scope.document.images[0],
+            "image/*"
+          ).then(function() {
+              // file opened successfully
+              conosole.log("hi!");
+
+          }, function(err) {
+              // An error occurred. Show a message to the user
+              $scope.showAlert("Error, could not open this image file...");
+          });
+
     }
 });
